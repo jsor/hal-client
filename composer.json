@@ -1,0 +1,40 @@
+{
+    "name": "jsor/hal-client",
+    "description": "Geo-Toolkit for PHP",
+    "keywords": ["hal", "rest", "api", "json", "http", "client"],
+    "homepage": "https://github.com/jsor/hal-client",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jan Sorgalla",
+            "email": "jsorgalla@gmail.com",
+            "homepage": "http://sorgalla.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5",
+        "psr/http-message": "~1.0",
+        "guzzlehttp/psr7": "~1.0"
+    },
+    "require-dev": {
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "suggest": {
+        "guzzlehttp/guzzle": "For using the Guzzle6HttpClient"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jsor\\HalClient\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Jsor\\HalClient\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}

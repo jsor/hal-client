@@ -1,0 +1,19 @@
+{
+  "_links": {
+    "self": {
+      "href": "http://propilex.herokuapp.com/",
+      "title": "The API starting point."
+    },
+    "p:documents": {
+      "href": "http://propilex.herokuapp.com/documents",
+      "title": "List of all documents."
+    },
+    "curies": [
+      {
+        "href": "http://propilex.herokuapp.com/rels/{rel}",
+        "name": "p",
+        "templated": true
+      }
+    ]
+  }
+}

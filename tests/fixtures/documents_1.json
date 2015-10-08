@@ -1,0 +1,15 @@
+{
+  "id": 1,
+  "title": "Test 1",
+  "body": "Lorem ipsum",
+  "created_at": "2015-10-09 09:21:41",
+  "updated_at": "2015-10-09 09:21:41",
+  "_links": {
+    "self": {
+      "href": "http://propilex.herokuapp.com/documents/1"
+    },
+    "documents": {
+      "href": "http://propilex.herokuapp.com/documents"
+    }
+  }
+}
