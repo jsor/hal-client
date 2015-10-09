@@ -57,6 +57,7 @@ class ClientTest extends TestCase
         );
 
         $client->get('', [
+            'version' => '1.0',
             'headers' => [
                 'Foo' => 'bar'
             ],
@@ -66,6 +67,7 @@ class ClientTest extends TestCase
 
         $lastRequest = $httpClient->getLastRequest();
 
+        $this->assertSame('1.0', $lastRequest->getProtocolVersion());
         $this->assertSame('GET', $lastRequest->getMethod());
         $this->assertSame('http://propilex.herokuapp.com?key1=key2', (string) $lastRequest->getUri());
         $this->assertSame('Body', (string) $lastRequest->getBody());
@@ -85,6 +87,7 @@ class ClientTest extends TestCase
         );
 
         $client->post('', [
+            'version' => '1.0',
             'headers' => [
                 'Foo' => 'bar'
             ],
@@ -94,6 +97,7 @@ class ClientTest extends TestCase
 
         $lastRequest = $httpClient->getLastRequest();
 
+        $this->assertSame('1.0', $lastRequest->getProtocolVersion());
         $this->assertSame('POST', $lastRequest->getMethod());
         $this->assertSame('http://propilex.herokuapp.com?key1=key2', (string) $lastRequest->getUri());
         $this->assertSame('Body', (string) $lastRequest->getBody());
@@ -113,6 +117,7 @@ class ClientTest extends TestCase
         );
 
         $client->put('', [
+            'version' => '1.0',
             'headers' => [
                 'Foo' => 'bar'
             ],
@@ -122,6 +127,7 @@ class ClientTest extends TestCase
 
         $lastRequest = $httpClient->getLastRequest();
 
+        $this->assertSame('1.0', $lastRequest->getProtocolVersion());
         $this->assertSame('PUT', $lastRequest->getMethod());
         $this->assertSame('http://propilex.herokuapp.com?key1=key2', (string) $lastRequest->getUri());
         $this->assertSame('Body', (string) $lastRequest->getBody());
@@ -141,6 +147,7 @@ class ClientTest extends TestCase
         );
 
         $client->delete('', [
+            'version' => '1.0',
             'headers' => [
                 'Foo' => 'bar'
             ],
@@ -150,6 +157,7 @@ class ClientTest extends TestCase
 
         $lastRequest = $httpClient->getLastRequest();
 
+        $this->assertSame('1.0', $lastRequest->getProtocolVersion());
         $this->assertSame('DELETE', $lastRequest->getMethod());
         $this->assertSame('http://propilex.herokuapp.com?key1=key2', (string) $lastRequest->getUri());
         $this->assertSame('Body', (string) $lastRequest->getBody());
@@ -169,6 +177,7 @@ class ClientTest extends TestCase
         );
 
         $client->request('PATCH', '', [
+            'version' => '1.0',
             'headers' => [
                 'Foo' => 'bar'
             ],
@@ -178,6 +187,7 @@ class ClientTest extends TestCase
 
         $lastRequest = $httpClient->getLastRequest();
 
+        $this->assertSame('1.0', $lastRequest->getProtocolVersion());
         $this->assertSame('PATCH', $lastRequest->getMethod());
         $this->assertSame('http://propilex.herokuapp.com?key1=key2', (string) $lastRequest->getUri());
         $this->assertSame('Body', (string) $lastRequest->getBody());

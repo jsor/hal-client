@@ -99,6 +99,10 @@ final class Client implements ClientInterface
 
         $request = $request->withMethod($method);
 
+        if (isset($options['version'])) {
+            $request = $request->withProtocolVersion($options['version']);
+        }
+
         $uri = GuzzlePsr7\Uri::resolve($request->getUri(), $uri);
 
         if (isset($options['query'])) {
