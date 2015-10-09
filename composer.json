@@ -1,6 +1,6 @@
 {
     "name": "jsor/hal-client",
-    "description": "Geo-Toolkit for PHP",
+    "description": "A lightweight client for consuming and manipulating Hypertext Application Language (HAL) resources.",
     "keywords": ["hal", "rest", "api", "json", "http", "client"],
     "homepage": "https://github.com/jsor/hal-client",
     "license": "MIT",
