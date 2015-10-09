@@ -229,38 +229,13 @@ final class Client implements ClientInterface
             );
         }
 
-        try {
-            $body = $response->getBody()->getContents();
-        } catch (\Exception $e) {
-            throw new Exception\BadResponseException(
-                sprintf(
-                    'Error getting response body: %s.',
-                    $e->getMessage()
-                ),
-                $request,
-                $response,
-                new Resource($this),
-                $e
-            );
-        }
+        $body = $this->fetchBody($request, $response);
 
         if ('' === $body) {
             return new Resource($this);
         }
 
-        $data = json_decode($body, true);
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new Exception\BadResponseException(
-                sprintf(
-                    'JSON parse error: %s.',
-                    json_last_error_msg()
-                ),
-                $request,
-                $response,
-                new Resource($this)
-            );
-        }
+        $data = $this->decodeBody($request, $response, $body);
 
         return Resource::fromArray($this, (array) $data);
     }
@@ -276,5 +251,47 @@ final class Client implements ClientInterface
         }
 
         return false;
+    }
+
+    private function fetchBody(
+        RequestInterface $request,
+        ResponseInterface $response
+    ) {
+        try {
+            return $response->getBody()->getContents();
+        } catch (\Exception $e) {
+            throw new Exception\BadResponseException(
+                sprintf(
+                    'Error getting response body: %s.',
+                    $e->getMessage()
+                ),
+                $request,
+                $response,
+                new Resource($this),
+                $e
+            );
+        }
+    }
+
+    private function decodeBody(
+        RequestInterface $request,
+        ResponseInterface $response,
+        $body
+    ) {
+        $data = json_decode($body, true);
+
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new Exception\BadResponseException(
+                sprintf(
+                    'JSON parse error: %s.',
+                    json_last_error_msg()
+                ),
+                $request,
+                $response,
+                new Resource($this)
+            );
+        }
+
+        return $data;
     }
 }
