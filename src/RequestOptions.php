@@ -9,9 +9,11 @@ final class RequestOptions
 {
     /**
      * body: (array|string|null|callable|iterator|object) Body to send in the
-     * request. If the the value is an array, it will be serialized and a
-     * Content-Type: application/x-www-form-urlencoded header will be set (but
-     * only if none is already present).
+     * request.
+     *
+     * If the the value is an array, it will be encoded as JSON and a
+     * Content-Type: application/json header will be set (but only if no
+     * Content-Type header already present).
      */
     const BODY = 'body';
 

@@ -58,7 +58,7 @@ class FixtureHttpClient implements HttpClientInterface
                 }
 
                 if ('PUT' === $request->getMethod()) {
-                    if ('title=Test+4+changed&body=Lorem+ipsum' === $request->getBody()->getContents()) {
+                    if ('{"title":"Test 4 changed","body":"Lorem ipsum"}' === $request->getBody()->getContents()) {
                         return new Response(
                             200,
                             [
@@ -82,7 +82,7 @@ class FixtureHttpClient implements HttpClientInterface
                 break;
             case '/documents':
                 if ('POST' === $request->getMethod()) {
-                    if ('title=Test+4&body=Lorem+ipsum' === $request->getBody()->getContents()) {
+                    if ('{"title":"Test 4","body":"Lorem ipsum"}' === $request->getBody()->getContents()) {
                         return new Response(
                             201,
                             [

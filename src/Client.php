@@ -132,12 +132,12 @@ final class Client implements ClientInterface
             $body = $options['body'];
 
             if (is_array($body)) {
-                $body = http_build_query($body, null, '&');
+                $body = json_encode($body);
 
                 if (!$request->hasHeader('Content-Type')) {
                     $request = $request->withHeader(
                         'Content-Type',
-                        'application/x-www-form-urlencoded'
+                        'application/json'
                     );
                 }
             }
