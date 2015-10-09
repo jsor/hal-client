@@ -3,27 +3,29 @@ language: php
 php:
   - 5.5
   - 5.6
-  - 7.0
+  - 7
   - hhvm
 
-before_install:
-  - composer self-update
-
-install:
-  - travis_retry composer install --prefer-source
-  - travis_retry composer require satooshi/php-coveralls:dev-master --prefer-source
-
-script:
-  - phpunit -v --coverage-text --coverage-clover=build/logs/clover.xml
-
-after_script:
-  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then php vendor/bin/coveralls -v; fi
-  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
-  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml; fi
-
 matrix:
+  include:
+    - php: 5.5
+      env: dependencies=lowest
+    - php: 5.6
+      env: dependencies=lowest
+    - php: 7
+      env: dependencies=lowest
+    - php: hhvm
+      env: dependencies=lowest
+    - php: 5.5
+      env: dependencies=highest
+    - php: 5.6
+      env: dependencies=highest
+    - php: 7
+      env: dependencies=highest
+    - php: hhvm
+      env: dependencies=highest
   allow_failures:
-    - php: 7.0
+    - php: 7
     - php: hhvm
   fast_finish: true
 
@@ -31,3 +33,22 @@ cache:
   directories:
     - vendor
     - $HOME/.composer/cache
+
+before_install:
+  - composer self-update -q
+  - if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN}; fi;
+
+install:
+  - if [ -z "$dependencies" ]; then travis_retry composer install; fi;
+  - if [ "$dependencies" = "lowest" ]; then travis_retry composer update --prefer-lowest -n; fi;
+  - if [ "$dependencies" = "highest" ]; then travis_retry composer update -n; fi;
+  - travis_retry composer require phpunit/phpunit:^4.7
+  - travis_retry composer require satooshi/php-coveralls:dev-master
+  - composer show -i
+
+script:
+  - vendor/bin/phpunit -v --coverage-text --coverage-clover=build/logs/clover.xml
+
+after_script:
+  - if [ -f ./build/logs/clover.xml ]; then php vendor/bin/coveralls -v; fi
+  - if [ -f ./build/logs/clover.xml ]; then wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml; fi
