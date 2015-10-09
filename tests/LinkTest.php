@@ -72,7 +72,7 @@ class LinkTest extends TestCase
             'headers' => [
                 'Foo' => 'bar'
             ],
-            'body' => 'Body',
+            'body'  => 'Body',
             'query' => 'key1=key2'
         ]);
 
@@ -112,7 +112,7 @@ class LinkTest extends TestCase
             'headers' => [
                 'Foo' => 'bar'
             ],
-            'body' => 'Body',
+            'body'  => 'Body',
             'query' => 'key1=key2'
         ]);
 
@@ -152,7 +152,7 @@ class LinkTest extends TestCase
             'headers' => [
                 'Foo' => 'bar'
             ],
-            'body' => 'Body',
+            'body'  => 'Body',
             'query' => 'key1=key2'
         ]);
 
@@ -192,7 +192,7 @@ class LinkTest extends TestCase
             'headers' => [
                 'Foo' => 'bar'
             ],
-            'body' => 'Body',
+            'body'  => 'Body',
             'query' => 'key1=key2'
         ]);
 
@@ -232,7 +232,7 @@ class LinkTest extends TestCase
             'headers' => [
                 'Foo' => 'bar'
             ],
-            'body' => 'Body',
+            'body'  => 'Body',
             'query' => 'key1=key2'
         ]);
 

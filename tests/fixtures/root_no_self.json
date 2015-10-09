@@ -1,8 +1,0 @@
-{
-  "_links": {
-    "p:documents": {
-      "href": "http://propilex.herokuapp.com/documents",
-      "title": "List of all documents."
-    }
-  }
-}

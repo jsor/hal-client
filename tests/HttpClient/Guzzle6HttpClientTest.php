@@ -15,12 +15,14 @@ class Guzzle6HttpClientTest extends TestCase
      */
     public function it_will_call_send()
     {
+        $response = new Response(200, ['Content-Type' => 'application/hal+json']);
+
         $guzzleClient = $this->getMock(GuzzleClientInterface::class);
 
         $guzzleClient
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnValue(new Response(200)));
+            ->will($this->returnValue($response));
 
         $client = new Client(
             'http://propilex.herokuapp.com',
@@ -32,7 +34,7 @@ class Guzzle6HttpClientTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Jsor\HalClient\Exception\RequestException
+     * @expectedException \Jsor\HalClient\Exception\BadResponseException
      */
     public function it_will_transform_exception()
     {
@@ -41,7 +43,7 @@ class Guzzle6HttpClientTest extends TestCase
         $guzzleClient
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnCallback(function($request) {
+            ->will($this->returnCallback(function ($request) {
                 throw GuzzleRequestException::create($request);
             }));
 

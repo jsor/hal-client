@@ -2,18 +2,21 @@
 
 namespace Jsor\HalClient\Exception;
 
+use Jsor\HalClient\Resource;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class RequestException extends \RuntimeException implements Exception
+class BadResponseException extends \RuntimeException implements Exception
 {
     private $request;
     private $response;
+    private $resource;
 
     public function __construct(
         $message,
         RequestInterface $request,
-        ResponseInterface $response = null,
+        ResponseInterface $response,
+        Resource $resource,
         \Exception $previous = null
     ) {
         $code = $response ? $response->getStatusCode() : 0;
@@ -22,23 +25,16 @@ class RequestException extends \RuntimeException implements Exception
 
         $this->request  = $request;
         $this->response = $response;
+        $this->resource = $resource;
     }
 
     public static function create(
         RequestInterface $request,
-        ResponseInterface $response = null,
+        ResponseInterface $response,
+        Resource $resource,
         \Exception $previous = null,
         $message = null
     ) {
-        if (!$response) {
-            return new self(
-                $message ?: 'Error completing request',
-                $request,
-                null,
-                $previous
-            );
-        }
-
         if (!$message) {
             $code = $response->getStatusCode();
 
@@ -52,7 +48,7 @@ class RequestException extends \RuntimeException implements Exception
         }
 
         $message = sprintf(
-            '%s [url] %s [http method] %s [status code] %s [reason phrase] %s',
+            '%s [url] %s [http method] %s [status code] %s [reason phrase] %s.',
             $message,
             $request->getRequestTarget(),
             $request->getMethod(),
@@ -60,7 +56,7 @@ class RequestException extends \RuntimeException implements Exception
             $response->getReasonPhrase()
         );
 
-        return new self($message, $request, $response, $previous);
+        return new self($message, $request, $response, $resource, $previous);
     }
 
     public function getRequest()
@@ -71,6 +67,11 @@ class RequestException extends \RuntimeException implements Exception
     public function getResponse()
     {
         return $this->response;
+    }
+
+    public function getResource()
+    {
+        return $this->resource;
     }
 
     public function isClientError()

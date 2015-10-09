@@ -18,7 +18,7 @@ class ResourceTest extends TestCase
             $httpClient
         );
 
-        $data = json_decode(file_get_contents(__DIR__.'/fixtures/documents.json'), true);
+        $data = json_decode(file_get_contents(__DIR__ . '/fixtures/documents.json'), true);
 
         $resource = Resource::fromArray(
             $client,
@@ -52,10 +52,10 @@ class ResourceTest extends TestCase
             $httpClient
         );
 
-        $data = json_decode(file_get_contents(__DIR__.'/fixtures/documents.json'), true);
-        $data['_embedded']['empty_array'] = [];
+        $data                              = json_decode(file_get_contents(__DIR__ . '/fixtures/documents.json'), true);
+        $data['_embedded']['empty_array']  = [];
         $data['_embedded']['string_array'] = ['StringArray'];
-        $data['_embedded']['string'] = 'String';
+        $data['_embedded']['string']       = 'String';
 
         $resource = Resource::fromArray(
             $client,
@@ -93,10 +93,10 @@ class ResourceTest extends TestCase
             $httpClient
         );
 
-        $data = json_decode(file_get_contents(__DIR__.'/fixtures/documents.json'), true);
-        $data['_links']['empty_array'] = [];
+        $data                           = json_decode(file_get_contents(__DIR__ . '/fixtures/documents.json'), true);
+        $data['_links']['empty_array']  = [];
         $data['_links']['string_array'] = ['StringArray'];
-        $data['_links']['string'] = 'String';
+        $data['_links']['string']       = 'String';
 
         $resource = Resource::fromArray(
             $client,
@@ -135,7 +135,7 @@ class ResourceTest extends TestCase
             $httpClient
         );
 
-        $data = json_decode(file_get_contents(__DIR__.'/fixtures/documents.json'), true);
+        $data                     = json_decode(file_get_contents(__DIR__ . '/fixtures/documents.json'), true);
         $data['_links']['curies'] = array_merge(['Curie'], $data['_links']['curies']);
 
         $resource = Resource::fromArray(
@@ -178,7 +178,7 @@ class ResourceTest extends TestCase
             'headers' => [
                 'Foo' => 'bar'
             ],
-            'body' => 'Body',
+            'body'  => 'Body',
             'query' => 'key1=key2'
         ]);
 
@@ -216,7 +216,7 @@ class ResourceTest extends TestCase
             'headers' => [
                 'Foo' => 'bar'
             ],
-            'body' => 'Body',
+            'body'  => 'Body',
             'query' => 'key1=key2'
         ]);
 
@@ -254,7 +254,7 @@ class ResourceTest extends TestCase
             'headers' => [
                 'Foo' => 'bar'
             ],
-            'body' => 'Body',
+            'body'  => 'Body',
             'query' => 'key1=key2'
         ]);
 
@@ -292,7 +292,7 @@ class ResourceTest extends TestCase
             'headers' => [
                 'Foo' => 'bar'
             ],
-            'body' => 'Body',
+            'body'  => 'Body',
             'query' => 'key1=key2'
         ]);
 
@@ -330,7 +330,7 @@ class ResourceTest extends TestCase
             'headers' => [
                 'Foo' => 'bar'
             ],
-            'body' => 'Body',
+            'body'  => 'Body',
             'query' => 'key1=key2'
         ]);
 

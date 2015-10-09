@@ -87,7 +87,7 @@ class FixtureHttpClient implements HttpClientInterface
                             201,
                             [
                                 'Content-Type' => 'application/hal+json',
-                                'Location' => '/documents/4'
+                                'Location'     => '/documents/4'
                             ],
                             file_get_contents(__DIR__ . '/fixtures/documents_4.json')
                         );

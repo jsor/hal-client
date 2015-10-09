@@ -120,7 +120,7 @@ final class Resource
                 $embedded = [$embedded];
             }
 
-            $embedded = array_map(function($embed) {
+            $embedded = array_map(function ($embed) {
                 if (null !== $embed && !is_array($embed)) {
                     $embed = [$embed];
                 }
@@ -128,7 +128,7 @@ final class Resource
                 return $embed;
             }, $embedded);
 
-            return array_filter($embedded, function($embed) {
+            return array_filter($embedded, function ($embed) {
                 return null !== $embed;
             });
         }
@@ -163,6 +163,10 @@ final class Resource
             return true;
         }
 
+        if (!isset($this->links['curies'])) {
+            return false;
+        }
+
         foreach ($this->getLink('curies') as $curie) {
             if (!$curie->getName()) {
                 continue;
@@ -171,7 +175,7 @@ final class Resource
             $linkRel = $curie->getName() . ':' . $rel;
 
             if (isset($this->links[$linkRel])) {
-               return true;
+                return true;
             }
         }
 
@@ -212,7 +216,7 @@ final class Resource
                 $links = [$links];
             }
 
-            $links = array_map(function($link) {
+            $links = array_map(function ($link) {
                 if (null !== $link && !is_array($link)) {
                     $link = ['href' => $link];
                 }
@@ -220,23 +224,25 @@ final class Resource
                 return $link;
             }, $links);
 
-            return array_filter($links, function($link) {
+            return array_filter($links, function ($link) {
                 return null !== $link;
             });
         }
 
-        foreach ($this->getLink('curies') as $curie) {
-            if (!$curie->getName()) {
-                continue;
+        if ($this->hasLink('curies')) {
+            foreach ($this->getLink('curies') as $curie) {
+                if (!$curie->getName()) {
+                    continue;
+                }
+
+                $linkRel = $curie->getName() . ':' . $rel;
+
+                if (!isset($this->links[$linkRel])) {
+                    continue;
+                }
+
+                return $this->getLinkData($linkRel);
             }
-
-            $linkRel = $curie->getName() . ':' . $rel;
-
-            if (!isset($this->links[$linkRel])) {
-                continue;
-            }
-
-            return $this->getLinkData($linkRel);
         }
 
         throw new Exception\InvalidArgumentException(

@@ -3,8 +3,11 @@
 namespace Jsor\HalClient;
 
 use GuzzleHttp\Psr7\Response;
+use Jsor\HalClient\Exception\BadResponseException;
 use Jsor\HalClient\HttpClient\HttpClientInterface;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 class ClientTest extends TestCase
 {
@@ -62,7 +65,7 @@ class ClientTest extends TestCase
             'headers' => [
                 'Foo' => 'bar'
             ],
-            'body' => 'Body',
+            'body'  => 'Body',
             'query' => 'key1=key2'
         ]);
 
@@ -92,7 +95,7 @@ class ClientTest extends TestCase
             'headers' => [
                 'Foo' => 'bar'
             ],
-            'body' => 'Body',
+            'body'  => 'Body',
             'query' => 'key1=key2'
         ]);
 
@@ -122,7 +125,7 @@ class ClientTest extends TestCase
             'headers' => [
                 'Foo' => 'bar'
             ],
-            'body' => 'Body',
+            'body'  => 'Body',
             'query' => 'key1=key2'
         ]);
 
@@ -152,7 +155,7 @@ class ClientTest extends TestCase
             'headers' => [
                 'Foo' => 'bar'
             ],
-            'body' => 'Body',
+            'body'  => 'Body',
             'query' => 'key1=key2'
         ]);
 
@@ -182,7 +185,7 @@ class ClientTest extends TestCase
             'headers' => [
                 'Foo' => 'bar'
             ],
-            'body' => 'Body',
+            'body'  => 'Body',
             'query' => 'key1=key2'
         ]);
 
@@ -219,7 +222,7 @@ class ClientTest extends TestCase
             'headers' => [
                 'Foo' => 'bar'
             ],
-            'body' => 'Body',
+            'body'  => 'Body',
             'query' => [
                 'key1' => 'key2',
             ],
@@ -231,16 +234,147 @@ class ClientTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Jsor\HalClient\Exception\RequestException
+     * @expectedException \Jsor\HalClient\Exception\HttpClientException
+     * @expectedExceptionMessage Exception thrown by the http client while sending request: Error.
      */
-    public function it_throws_request_exception_when_http_client_returns_unsuccessful_response()
+    public function it_throws_exception_when_http_client_throws()
+    {
+        $exception = new \Exception('Error');
+
+        $httpClient = $this->getMock(HttpClientInterface::class);
+
+        $httpClient
+            ->expects($this->any())
+            ->method('send')
+            ->will($this->throwException($exception));
+
+        $client = new Client(
+            'http://propilex.herokuapp.com',
+            $httpClient
+        );
+
+        try {
+            $client->request('GET', '/');
+        } catch (\Exception $e) {
+            $this->assertSame($exception, $e->getPrevious());
+            $this->assertInstanceOf(RequestInterface::class, $e->getRequest());
+
+            throw $e;
+        }
+    }
+
+    /**
+     * @test
+     * @expectedException \Jsor\HalClient\Exception\BadResponseException
+     * @expectedExceptionMessage Client error [url] / [http method] GET [status code] 404 [reason phrase] Not Found.
+     */
+    public function it_throws_exception_when_http_client_returns_client_error()
     {
         $httpClient = $this->getMock(HttpClientInterface::class);
 
         $httpClient
             ->expects($this->any())
             ->method('send')
-            ->will($this->returnValue(new Response(404)));
+            ->will($this->returnValue(new Response(404, ['Content-Type' => 'application/hal+json'], '{"msg":"error"}')));
+
+        $client = new Client(
+            'http://propilex.herokuapp.com',
+            $httpClient
+        );
+
+        try {
+            $client->request('GET', '/');
+        } catch (BadResponseException $e) {
+            $this->assertInstanceOf(RequestInterface::class, $e->getRequest());
+            $this->assertInstanceOf(ResponseInterface::class, $e->getResponse());
+            $this->assertInstanceOf(Resource::class, $e->getResource());
+            $this->assertFalse($e->getResource()->hasLink('self'));
+            $this->assertTrue($e->isClientError());
+            $this->assertFalse($e->isServerError());
+
+            throw $e;
+        }
+    }
+
+    /**
+     * @test
+     * @expectedException \Jsor\HalClient\Exception\BadResponseException
+     * @expectedExceptionMessage Server error [url] / [http method] GET [status code] 500 [reason phrase] Internal Server Error.
+     */
+    public function it_throws_exception_when_http_client_returns_server_error()
+    {
+        $httpClient = $this->getMock(HttpClientInterface::class);
+
+        $httpClient
+            ->expects($this->any())
+            ->method('send')
+            ->will($this->returnValue(new Response(500, ['Content-Type' => 'application/hal+json'], '{"msg":"error"}')));
+
+        $client = new Client(
+            'http://propilex.herokuapp.com',
+            $httpClient
+        );
+
+        try {
+            $client->request('GET', '/');
+        } catch (BadResponseException $e) {
+            $this->assertInstanceOf(RequestInterface::class, $e->getRequest());
+            $this->assertInstanceOf(ResponseInterface::class, $e->getResponse());
+            $this->assertInstanceOf(Resource::class, $e->getResource());
+            $this->assertFalse($e->getResource()->hasLink('self'));
+            $this->assertFalse($e->isClientError());
+            $this->assertTrue($e->isServerError());
+
+            throw $e;
+        }
+    }
+
+    /**
+     * @test
+     * @expectedException \Jsor\HalClient\Exception\BadResponseException
+     * @expectedExceptionMessage Unsuccessful response [url] / [http method] GET [status code] 303 [reason phrase] See Other.
+     */
+    public function it_throws_exception_when_http_client_returns_unsuccessful_response()
+    {
+        $httpClient = $this->getMock(HttpClientInterface::class);
+
+        $httpClient
+            ->expects($this->any())
+            ->method('send')
+            ->will($this->returnValue(new Response(303, ['Content-Type' => 'application/hal+json'], '{"msg":"error"}')));
+
+        $client = new Client(
+            'http://propilex.herokuapp.com',
+            $httpClient
+        );
+
+        try {
+            $client->request('GET', '/');
+        } catch (BadResponseException $e) {
+            $this->assertInstanceOf(RequestInterface::class, $e->getRequest());
+            $this->assertInstanceOf(ResponseInterface::class, $e->getResponse());
+            $this->assertInstanceOf(Resource::class, $e->getResource());
+            $this->assertFalse($e->getResource()->hasLink('self'));
+            $this->assertFalse($e->isClientError());
+            $this->assertFalse($e->isServerError());
+
+            throw $e;
+        }
+    }
+
+    /**
+     * @test
+     * @expectedException \Jsor\HalClient\Exception\BadResponseException
+     * @expectedExceptionMessage Request did not return a valid content type. Returned content type: text/plain.
+     */
+    public function it_throws_exception_for_invalid_content_type()
+    {
+        $httpClient = $this->getMock(HttpClientInterface::class);
+
+        $httpClient
+            ->expects($this->any())
+            ->method('send')
+            ->will($this->returnValue(new Response(200, ['Content-Type' => 'text/plain'])));
 
         $client = new Client(
             'http://propilex.herokuapp.com',
@@ -252,16 +386,24 @@ class ClientTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Jsor\HalClient\Exception\InvalidJsonException
+     * @expectedException \Jsor\HalClient\Exception\BadResponseException
+     * @expectedExceptionMessage Error getting response body: Error.
      */
-    public function it_throws_invalid_json_exception_when_http_client_returns_invalid_json()
+    public function it_throws_exception_when_getting_response_body_throws()
     {
+        $stream = $this->getMock(StreamInterface::class);
+
+        $stream
+            ->expects($this->once())
+            ->method('getContents')
+            ->will($this->throwException(new \Exception('Error')));
+
         $httpClient = $this->getMock(HttpClientInterface::class);
 
         $httpClient
             ->expects($this->any())
             ->method('send')
-            ->will($this->returnValue(new Response(200, [], '{')));
+            ->will($this->returnValue(new Response(200, ['Content-Type' => 'application/hal+json'], $stream)));
 
         $client = new Client(
             'http://propilex.herokuapp.com',
@@ -273,6 +415,29 @@ class ClientTest extends TestCase
 
     /**
      * @test
+     * @expectedException \Jsor\HalClient\Exception\BadResponseException
+     * @expectedExceptionMessage JSON parse error: Syntax error.
+     */
+    public function it_throws_exception_when_http_client_returns_invalid_json()
+    {
+        $httpClient = $this->getMock(HttpClientInterface::class);
+
+        $httpClient
+            ->expects($this->any())
+            ->method('send')
+            ->will($this->returnValue(new Response(200, ['Content-Type' => 'application/hal+json'], '{')));
+
+        $client = new Client(
+            'http://propilex.herokuapp.com',
+            $httpClient
+        );
+
+        $client->request('GET', '/');
+    }
+
+    /**
+     * @test
+     * @group 123
      */
     public function it_can_browse()
     {
@@ -342,7 +507,7 @@ class ClientTest extends TestCase
         $newResource = $resource->post([
             'body' => [
                 'title' => 'Test 4',
-                'body' => 'Lorem ipsum'
+                'body'  => 'Lorem ipsum'
             ]
         ]);
 
@@ -351,7 +516,7 @@ class ClientTest extends TestCase
         $changedResource = $newResource->put([
             'body' => [
                 'title' => 'Test 4 changed',
-                'body' => 'Lorem ipsum'
+                'body'  => 'Lorem ipsum'
             ]
         ]);
 

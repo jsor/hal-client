@@ -5,6 +5,7 @@ namespace Jsor\HalClient;
 use GuzzleHttp\Psr7 as GuzzlePsr7;
 use Jsor\HalClient\HttpClient\Guzzle6HttpClient;
 use Jsor\HalClient\HttpClient\HttpClientInterface;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 final class Client implements ClientInterface
@@ -12,13 +13,19 @@ final class Client implements ClientInterface
     private $httpClient;
     private $defaultRequest;
 
+    private $validContentTypes = [
+        'application/hal+json',
+        'application/json',
+        'application/vnd.error+json'
+    ];
+
     public function __construct($rootUrl, HttpClientInterface $httpClient = null)
     {
         $this->httpClient = $httpClient ?: new Guzzle6HttpClient();
 
         $this->defaultRequest = new GuzzlePsr7\Request('GET', $rootUrl, [
             'User-Agent' => self::class,
-            'Accept'     => 'application/hal+json, application/json'
+            'Accept'     => implode(', ', $this->validContentTypes)
         ]);
     }
 
@@ -99,13 +106,36 @@ final class Client implements ClientInterface
 
         $request = $request->withMethod($method);
 
+        $request = $request->withUri(
+            GuzzlePsr7\Uri::resolve($request->getUri(), $uri)
+        );
+
+        $request = $this->applyOptions($request, $options);
+
+        try {
+            $response = $this->httpClient->send($request);
+        } catch (\Exception $e) {
+            throw new Exception\HttpClientException(
+                sprintf(
+                    'Exception thrown by the http client while sending request: %s.',
+                    $e->getMessage()
+                ),
+                $request,
+                $e
+            );
+        }
+
+        return $this->handleResponse($request, $response, $options);
+    }
+
+    private function applyOptions(RequestInterface $request, array $options)
+    {
         if (isset($options['version'])) {
             $request = $request->withProtocolVersion($options['version']);
         }
 
-        $uri = GuzzlePsr7\Uri::resolve($request->getUri(), $uri);
-
         if (isset($options['query'])) {
+            $uri   = $request->getUri();
             $query = $options['query'];
 
             if (!is_array($query)) {
@@ -117,10 +147,10 @@ final class Client implements ClientInterface
                 $query
             );
 
-            $uri = $uri->withQuery(http_build_query($newQuery, null, '&'));
+            $request = $request->withUri(
+                $uri->withQuery(http_build_query($newQuery, null, '&'))
+            );
         }
-
-        $request = $request->withUri($uri);
 
         if (isset($options['headers'])) {
             foreach ($options['headers'] as $name => $value) {
@@ -145,10 +175,14 @@ final class Client implements ClientInterface
             $request = $request->withBody(GuzzlePsr7\stream_for($body));
         }
 
-        $response = $this->httpClient->send($request);
+        return $request;
+    }
 
-        // Check for "misbehaving" http clients returning not successful
-        // responses instead of throwing a RequestException
+    private function handleResponse(
+        RequestInterface $request,
+        ResponseInterface $response,
+        array $options
+    ) {
         $statusCode = $response->getStatusCode();
 
         if ($statusCode >= 200 && $statusCode < 300) {
@@ -157,26 +191,90 @@ final class Client implements ClientInterface
                 return $response;
             }
 
-            return $this->createResource($response);
+            return $this->createResource($request, $response);
         }
 
-        throw Exception\RequestException::create(
+        throw Exception\BadResponseException::create(
             $request,
-            $response
+            $response,
+            $this->createResource($request, $response, true)
         );
     }
 
-    private function createResource(ResponseInterface $response)
-    {
-        $data = json_decode($response->getBody()->getContents(), true);
+    private function createResource(
+        RequestInterface $request,
+        ResponseInterface $response,
+        $ignoreInvalidContentType = false
+    ) {
+        if (204 === $response->getStatusCode()) {
+            // No-Content response
+            return new Resource($this);
+        }
+
+        if (!$this->isValidContentType($response)) {
+            if ($ignoreInvalidContentType) {
+                return new Resource($this);
+            }
+
+            $types = $response->getHeader('Content-Type') ?: ['none'];
+
+            throw new Exception\BadResponseException(
+                sprintf(
+                    'Request did not return a valid content type. Returned content type: %s.',
+                    implode(', ', $types)
+                ),
+                $request,
+                $response,
+                new Resource($this)
+            );
+        }
+
+        try {
+            $body = $response->getBody()->getContents();
+        } catch (\Exception $e) {
+            throw new Exception\BadResponseException(
+                sprintf(
+                    'Error getting response body: %s.',
+                    $e->getMessage()
+                ),
+                $request,
+                $response,
+                new Resource($this),
+                $e
+            );
+        }
+
+        if ('' === $body) {
+            return new Resource($this);
+        }
+
+        $data = json_decode($body, true);
 
         if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new Exception\InvalidJsonException(
+            throw new Exception\BadResponseException(
+                sprintf(
+                    'JSON parse error: %s.',
+                    json_last_error_msg()
+                ),
+                $request,
                 $response,
-                json_last_error_msg()
+                new Resource($this)
             );
         }
 
         return Resource::fromArray($this, (array) $data);
+    }
+
+    private function isValidContentType(ResponseInterface $response)
+    {
+        $contentTypeHeaders = $response->getHeader('Content-Type');
+
+        foreach ($this->validContentTypes as $validContentType) {
+            if (in_array($validContentType, $contentTypeHeaders)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

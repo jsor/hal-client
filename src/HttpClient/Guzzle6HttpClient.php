@@ -5,7 +5,7 @@ namespace Jsor\HalClient\HttpClient;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface as GuzzleClientInterface;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
-use Jsor\HalClient\Exception\RequestException;
+use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 
 final class Guzzle6HttpClient implements HttpClientInterface
@@ -22,12 +22,13 @@ final class Guzzle6HttpClient implements HttpClientInterface
         try {
             return $this->client->send($request);
         } catch (GuzzleRequestException $e) {
-            throw RequestException::create(
-                $e->getRequest(),
-                $e->getResponse(),
-                $e,
-                $e->getMessage()
-            );
+            $response = $e->getResponse();
+
+            if (!$response) {
+                $response = new Response(500, [], $e->getMessage());
+            }
+
+            return $response;
         }
     }
 }

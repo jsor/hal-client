@@ -14,7 +14,7 @@ class RecordingHttpClient implements HttpClientInterface
     {
         $this->requests[] = $request;
 
-        return new Response(200);
+        return new Response(200, ['Content-Type' => 'application/hal+json']);
     }
 
     /**
