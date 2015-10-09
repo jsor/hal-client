@@ -152,6 +152,11 @@ final class Client implements ClientInterface
         $statusCode = $response->getStatusCode();
 
         if ($statusCode >= 200 && $statusCode < 300) {
+            if (isset($options['return_raw_response']) &&
+                true === $options['return_raw_response']) {
+                return $response;
+            }
+
             return $this->createResource($response);
         }
 

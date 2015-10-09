@@ -4,6 +4,7 @@ namespace Jsor\HalClient;
 
 use GuzzleHttp\Psr7\Response;
 use Jsor\HalClient\HttpClient\HttpClientInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class ClientTest extends TestCase
 {
@@ -192,6 +193,40 @@ class ClientTest extends TestCase
         $this->assertSame('http://propilex.herokuapp.com?key1=key2', (string) $lastRequest->getUri());
         $this->assertSame('Body', (string) $lastRequest->getBody());
         $this->assertSame(['bar'], $lastRequest->getHeader('Foo'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_raw_response()
+    {
+        $response = new Response(200);
+
+        $httpClient = $this->getMock(HttpClientInterface::class);
+
+        $httpClient
+            ->expects($this->any())
+            ->method('send')
+            ->will($this->returnValue($response));
+
+        $client = new Client(
+            'http://propilex.herokuapp.com',
+            $httpClient
+        );
+
+        $response = $client->request('POST', '', [
+            'version' => '1.0',
+            'headers' => [
+                'Foo' => 'bar'
+            ],
+            'body' => 'Body',
+            'query' => [
+                'key1' => 'key2',
+            ],
+            'return_raw_response' => true
+        ]);
+
+        $this->assertSame($response, $response);
     }
 
     /**

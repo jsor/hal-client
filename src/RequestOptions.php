@@ -27,9 +27,15 @@ final class RequestOptions
      * query: (array|string) Associative array of query string values to add
      * to the request. This option uses PHP's http_build_query() to create
      * the string representation. Pass a string value if you need more
-     * control than what this method provides
+     * control than what this method provides.
      */
     const QUERY = 'query';
+
+    /**
+     * return_raw_response: If set to true, instructs the client to return the
+     * raw PSR-7 response object instead of a Resource object.
+     */
+    const RETURN_RAW_RESPONSE = 'return_raw_response';
 
     /**
      * version: (float) Specifies the HTTP protocol version to attempt to use.
