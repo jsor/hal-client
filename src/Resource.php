@@ -10,7 +10,7 @@ final class Resource
     private $embedded;
 
     public function __construct(
-        Client $client,
+        ClientInterface $client,
         array $properties = [],
         array $links = [],
         array $embedded = []
@@ -21,7 +21,7 @@ final class Resource
         $this->embedded   = $embedded;
     }
 
-    public static function fromArray(Client $client, array $array)
+    public static function fromArray(ClientInterface $client, array $array)
     {
         $links    = [];
         $embedded = [];

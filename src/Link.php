@@ -17,7 +17,7 @@ final class Link
     private $hreflang;
 
     public function __construct(
-        Client $client,
+        ClientInterface $client,
         $href,
         $templated = null,
         $type = null,
@@ -38,7 +38,7 @@ final class Link
         $this->hreflang    = $hreflang;
     }
 
-    public static function fromArray(Client $client, array $array)
+    public static function fromArray(ClientInterface $client, array $array)
     {
         $array = array_replace([
             'href'        => null,

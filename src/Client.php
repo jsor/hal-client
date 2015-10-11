@@ -11,6 +11,7 @@ use Psr\Http\Message\ResponseInterface;
 final class Client implements ClientInterface
 {
     private $httpClient;
+    private $factory;
     private $defaultRequest;
 
     private $validContentTypes = [
@@ -22,6 +23,8 @@ final class Client implements ClientInterface
     public function __construct($rootUrl, HttpClientInterface $httpClient = null)
     {
         $this->httpClient = $httpClient ?: new Guzzle6HttpClient();
+
+        $this->factory = new Internal\ResourceFactory($this, $this->validContentTypes);
 
         $this->defaultRequest = new GuzzlePsr7\Request('GET', $rootUrl, [
             'User-Agent' => self::class,
@@ -135,21 +138,7 @@ final class Client implements ClientInterface
         }
 
         if (isset($options['query'])) {
-            $uri   = $request->getUri();
-            $query = $options['query'];
-
-            if (!is_array($query)) {
-                $query = GuzzlePsr7\parse_query($query);
-            }
-
-            $newQuery = array_merge(
-                GuzzlePsr7\parse_query($uri->getQuery()),
-                $query
-            );
-
-            $request = $request->withUri(
-                $uri->withQuery(http_build_query($newQuery, null, '&'))
-            );
+            $request = $this->applyQuery($request, $options['query']);
         }
 
         if (isset($options['headers'])) {
@@ -159,23 +148,44 @@ final class Client implements ClientInterface
         }
 
         if (isset($options['body'])) {
-            $body = $options['body'];
-
-            if (is_array($body)) {
-                $body = json_encode($body);
-
-                if (!$request->hasHeader('Content-Type')) {
-                    $request = $request->withHeader(
-                        'Content-Type',
-                        'application/json'
-                    );
-                }
-            }
-
-            $request = $request->withBody(GuzzlePsr7\stream_for($body));
+            $request = $this->applyBody($request, $options['body']);
         }
 
         return $request;
+    }
+
+    private function applyQuery(RequestInterface $request, $query)
+    {
+        $uri = $request->getUri();
+
+        if (!is_array($query)) {
+            $query = GuzzlePsr7\parse_query($query);
+        }
+
+        $newQuery = array_merge(
+            GuzzlePsr7\parse_query($uri->getQuery()),
+            $query
+        );
+
+        return $request->withUri(
+            $uri->withQuery(http_build_query($newQuery, null, '&'))
+        );
+    }
+
+    private function applyBody(RequestInterface $request, $body)
+    {
+        if (is_array($body)) {
+            $body = json_encode($body);
+
+            if (!$request->hasHeader('Content-Type')) {
+                $request = $request->withHeader(
+                    'Content-Type',
+                    'application/json'
+                );
+            }
+        }
+
+        return $request->withBody(GuzzlePsr7\stream_for($body));
     }
 
     private function handleResponse(
@@ -191,113 +201,13 @@ final class Client implements ClientInterface
                 return $response;
             }
 
-            return $this->createResource($request, $response);
+            return $this->factory->createResource($request, $response);
         }
 
         throw Exception\BadResponseException::create(
             $request,
             $response,
-            $this->createResource($request, $response, true)
+            $this->factory->createResource($request, $response, true)
         );
-    }
-
-    private function createResource(
-        RequestInterface $request,
-        ResponseInterface $response,
-        $ignoreInvalidContentType = false
-    ) {
-        if (204 === $response->getStatusCode()) {
-            // No-Content response
-            return new Resource($this);
-        }
-
-        if (201 === $response->getStatusCode() &&
-            $response->hasHeader('Location')) {
-            // Created response with Location header
-            return $this->get($response->getHeader('Location')[0]);
-        }
-
-        if (!$this->isValidContentType($response)) {
-            if ($ignoreInvalidContentType) {
-                return new Resource($this);
-            }
-
-            $types = $response->getHeader('Content-Type') ?: ['none'];
-
-            throw new Exception\BadResponseException(
-                sprintf(
-                    'Request did not return a valid content type. Returned content type: %s.',
-                    implode(', ', $types)
-                ),
-                $request,
-                $response,
-                new Resource($this)
-            );
-        }
-
-        $body = $this->fetchBody($request, $response);
-
-        if ('' === $body) {
-            return new Resource($this);
-        }
-
-        $data = $this->decodeBody($request, $response, $body);
-
-        return Resource::fromArray($this, (array) $data);
-    }
-
-    private function isValidContentType(ResponseInterface $response)
-    {
-        $contentTypeHeaders = $response->getHeader('Content-Type');
-
-        foreach ($this->validContentTypes as $validContentType) {
-            if (in_array($validContentType, $contentTypeHeaders)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private function fetchBody(
-        RequestInterface $request,
-        ResponseInterface $response
-    ) {
-        try {
-            return $response->getBody()->getContents();
-        } catch (\Exception $e) {
-            throw new Exception\BadResponseException(
-                sprintf(
-                    'Error getting response body: %s.',
-                    $e->getMessage()
-                ),
-                $request,
-                $response,
-                new Resource($this),
-                $e
-            );
-        }
-    }
-
-    private function decodeBody(
-        RequestInterface $request,
-        ResponseInterface $response,
-        $body
-    ) {
-        $data = json_decode($body, true);
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new Exception\BadResponseException(
-                sprintf(
-                    'JSON parse error: %s.',
-                    json_last_error_msg()
-                ),
-                $request,
-                $response,
-                new Resource($this)
-            );
-        }
-
-        return $data;
     }
 }
