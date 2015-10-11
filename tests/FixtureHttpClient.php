@@ -71,7 +71,7 @@ class FixtureHttpClient implements HttpClientInterface
 
                 if ('GET' === $request->getMethod()) {
                     return new Response(
-                        201,
+                        200,
                         [
                             'Content-Type' => 'application/hal+json'
                         ],
@@ -86,10 +86,8 @@ class FixtureHttpClient implements HttpClientInterface
                         return new Response(
                             201,
                             [
-                                'Content-Type' => 'application/hal+json',
-                                'Location'     => '/documents/4'
-                            ],
-                            file_get_contents(__DIR__ . '/fixtures/documents_4.json')
+                                'Location' => '/documents/4'
+                            ]
                         );
                     }
                 }

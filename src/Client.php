@@ -211,6 +211,12 @@ final class Client implements ClientInterface
             return new Resource($this);
         }
 
+        if (201 === $response->getStatusCode() &&
+            $response->hasHeader('Location')) {
+            // Created response with Location header
+            return $this->get($response->getHeader('Location')[0]);
+        }
+
         if (!$this->isValidContentType($response)) {
             if ($ignoreInvalidContentType) {
                 return new Resource($this);
