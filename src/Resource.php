@@ -110,26 +110,8 @@ final class Resource
     private function getEmbedData($rel)
     {
         if (isset($this->embedded[$rel])) {
-            $embedded = $this->embedded[$rel];
-
-            if (!$embedded) {
-                return [];
-            }
-
-            if (!is_array($embedded)) {
-                $embedded = [$embedded];
-            }
-
-            $embedded = array_map(function ($embed) {
-                if (null !== $embed && !is_array($embed)) {
-                    $embed = [$embed];
-                }
-
-                return $embed;
-            }, $embedded);
-
-            return array_filter($embedded, function ($embed) {
-                return null !== $embed;
+            return $this->normalizeData($this->embedded[$rel], function($embed) {
+                return [$embed];
             });
         }
 
@@ -159,27 +141,7 @@ final class Resource
 
     public function hasLink($rel)
     {
-        if (isset($this->links[$rel])) {
-            return true;
-        }
-
-        if (!isset($this->links['curies'])) {
-            return false;
-        }
-
-        foreach ($this->getLink('curies') as $curie) {
-            if (!$curie->getName()) {
-                continue;
-            }
-
-            $linkRel = $curie->getName() . ':' . $rel;
-
-            if (isset($this->links[$linkRel])) {
-                return true;
-            }
-        }
-
-        return false;
+        return false !== $this->resolveLinkRel($rel);
     }
 
     /**
@@ -205,52 +167,68 @@ final class Resource
 
     private function getLinkData($rel)
     {
+        $rel = $this->resolveLinkRel($rel);
+
+        if (false === $rel) {
+            throw new Exception\InvalidArgumentException(
+                sprintf(
+                    'Unknown link %s.',
+                    json_encode($rel)
+                )
+            );
+        }
+
+        return $this->normalizeData($this->links[$rel], function($link) {
+            return ['href' => $link];
+        });
+    }
+
+    private function resolveLinkRel($rel)
+    {
         if (isset($this->links[$rel])) {
-            $links = $this->links[$rel];
-
-            if (!$links) {
-                return [];
-            }
-
-            if (!isset($links[0]) || !is_array($links)) {
-                $links = [$links];
-            }
-
-            $links = array_map(function ($link) {
-                if (null !== $link && !is_array($link)) {
-                    $link = ['href' => $link];
-                }
-
-                return $link;
-            }, $links);
-
-            return array_filter($links, function ($link) {
-                return null !== $link;
-            });
+            return $rel;
         }
 
-        if ($this->hasLink('curies')) {
-            foreach ($this->getLink('curies') as $curie) {
-                if (!$curie->getName()) {
-                    continue;
-                }
+        if (!isset($this->links['curies'])) {
+            return false;
+        }
 
-                $linkRel = $curie->getName() . ':' . $rel;
+        foreach ($this->getLink('curies') as $curie) {
+            if (!$curie->getName()) {
+                continue;
+            }
 
-                if (!isset($this->links[$linkRel])) {
-                    continue;
-                }
+            $linkRel = $curie->getName() . ':' . $rel;
 
-                return $this->getLinkData($linkRel);
+            if (isset($this->links[$linkRel])) {
+                return $linkRel;
             }
         }
 
-        throw new Exception\InvalidArgumentException(
-            sprintf(
-                'Unknown link %s.',
-                json_encode($rel)
-            )
-        );
+        return false;
+    }
+
+    private function normalizeData($data, callable $arrayNormalizer)
+    {
+        if (!$data) {
+            return [];
+        }
+
+        if (!isset($data[0]) || !is_array($data)) {
+            $data = [$data];
+        }
+
+        $data = array_map(function ($entry) use ($arrayNormalizer) {
+            if (null !== $entry && !is_array($entry)) {
+                $entry = $arrayNormalizer($entry);
+            }
+
+            return $entry;
+        }, $data);
+
+        return array_filter($data, function ($entry) {
+            return null !== $entry;
+        });
     }
 
     public function get(array $options = [])
