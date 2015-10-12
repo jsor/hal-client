@@ -201,6 +201,61 @@ class ClientTest extends TestCase
     /**
      * @test
      */
+    public function it_follows_location_for_created_response_with_empty_body()
+    {
+        $response1 = new Response(201, ['Location' => 'http://propilex.herokuapp.com/resource']);
+        $response2 = new Response(200, ['Content-Type' => 'application/hal+json'], '{"foo":"bar"}');
+
+        $httpClient = $this->getMock(HttpClientInterface::class);
+
+        $httpClient
+            ->expects($this->exactly(2))
+            ->method('send')
+            ->will($this->onConsecutiveCalls(
+                $response1,
+                $response2
+            ));
+
+        $client = new Client(
+            'http://propilex.herokuapp.com',
+            $httpClient
+        );
+
+        $resource = $client->post('');
+
+        $this->assertSame('bar', $resource->getProperty('foo'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_follow_location_for_created_response_with_non_empty_body()
+    {
+        $response = new Response(201, [
+            'Location' => 'http://propilex.herokuapp.com/resource',
+            'Content-Type' => 'application/hal+json'
+        ], '{"foo":"bar"}');
+
+        $httpClient = $this->getMock(HttpClientInterface::class);
+
+        $httpClient
+            ->expects($this->once())
+            ->method('send')
+            ->will($this->returnValue($response));
+
+        $client = new Client(
+            'http://propilex.herokuapp.com',
+            $httpClient
+        );
+
+        $resource = $client->post('');
+
+        $this->assertSame('bar', $resource->getProperty('foo'));
+    }
+
+    /**
+     * @test
+     */
     public function it_returns_raw_response()
     {
         $response = new Response(200);

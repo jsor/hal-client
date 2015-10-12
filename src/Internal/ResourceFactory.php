@@ -31,10 +31,13 @@ final class ResourceFactory
             return new Resource($this->client);
         }
 
+        $body = trim($this->fetchBody($request, $response));
+
         if (201 === $response->getStatusCode() &&
+            '' === $body &&
             $response->hasHeader('Location')) {
             // Created response with Location header
-            return $this->client->get($response->getHeader('Location')[0]);
+            return $this->client->request('GET', $response->getHeader('Location')[0]);
         }
 
         if (!$this->isValidContentType($response)) {
@@ -45,7 +48,7 @@ final class ResourceFactory
             );
         }
 
-        return $this->handleValidContentType($request, $response);
+        return $this->handleValidContentType($request, $response, $body);
     }
 
     private function isValidContentType(ResponseInterface $response)
@@ -85,10 +88,9 @@ final class ResourceFactory
 
     private function handleValidContentType(
         RequestInterface $request,
-        ResponseInterface $response
+        ResponseInterface $response,
+        $body
     ) {
-        $body = $this->fetchBody($request, $response);
-
         if ('' === $body) {
             return new Resource($this->client);
         }
