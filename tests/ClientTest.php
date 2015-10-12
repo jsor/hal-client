@@ -208,7 +208,7 @@ class ClientTest extends TestCase
         $httpClient = $this->getMock(HttpClientInterface::class);
 
         $httpClient
-            ->expects($this->any())
+            ->expects($this->once())
             ->method('send')
             ->will($this->returnValue($response));
 
@@ -244,7 +244,7 @@ class ClientTest extends TestCase
         $httpClient = $this->getMock(HttpClientInterface::class);
 
         $httpClient
-            ->expects($this->any())
+            ->expects($this->once())
             ->method('send')
             ->will($this->throwException($exception));
 
@@ -273,7 +273,7 @@ class ClientTest extends TestCase
         $httpClient = $this->getMock(HttpClientInterface::class);
 
         $httpClient
-            ->expects($this->any())
+            ->expects($this->once())
             ->method('send')
             ->will($this->returnValue(new Response(404, ['Content-Type' => 'application/hal+json'], '{"msg":"error"}')));
 
@@ -306,7 +306,7 @@ class ClientTest extends TestCase
         $httpClient = $this->getMock(HttpClientInterface::class);
 
         $httpClient
-            ->expects($this->any())
+            ->expects($this->once())
             ->method('send')
             ->will($this->returnValue(new Response(500, ['Content-Type' => 'application/hal+json'], '{"msg":"error"}')));
 
@@ -339,7 +339,7 @@ class ClientTest extends TestCase
         $httpClient = $this->getMock(HttpClientInterface::class);
 
         $httpClient
-            ->expects($this->any())
+            ->expects($this->once())
             ->method('send')
             ->will($this->returnValue(new Response(303, ['Content-Type' => 'application/hal+json'], '{"msg":"error"}')));
 
@@ -372,7 +372,7 @@ class ClientTest extends TestCase
         $httpClient = $this->getMock(HttpClientInterface::class);
 
         $httpClient
-            ->expects($this->any())
+            ->expects($this->once())
             ->method('send')
             ->will($this->returnValue(new Response(200, ['Content-Type' => 'text/plain'])));
 
@@ -401,7 +401,7 @@ class ClientTest extends TestCase
         $httpClient = $this->getMock(HttpClientInterface::class);
 
         $httpClient
-            ->expects($this->any())
+            ->expects($this->once())
             ->method('send')
             ->will($this->returnValue(new Response(200, ['Content-Type' => 'application/hal+json'], $stream)));
 
@@ -423,7 +423,7 @@ class ClientTest extends TestCase
         $httpClient = $this->getMock(HttpClientInterface::class);
 
         $httpClient
-            ->expects($this->any())
+            ->expects($this->once())
             ->method('send')
             ->will($this->returnValue(new Response(200, ['Content-Type' => 'application/hal+json'], '{')));
 
