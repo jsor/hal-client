@@ -167,9 +167,9 @@ final class Resource
 
     private function getLinkData($rel)
     {
-        $rel = $this->resolveLinkRel($rel);
+        $resolvedRel = $this->resolveLinkRel($rel);
 
-        if (false === $rel) {
+        if (false === $resolvedRel) {
             throw new Exception\InvalidArgumentException(
                 sprintf(
                     'Unknown link %s.',
@@ -178,7 +178,7 @@ final class Resource
             );
         }
 
-        return $this->normalizeData($this->links[$rel], function($link) {
+        return $this->normalizeData($this->links[$resolvedRel], function($link) {
             return ['href' => $link];
         });
     }
