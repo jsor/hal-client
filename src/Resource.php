@@ -110,7 +110,7 @@ final class Resource
     private function getEmbedData($rel)
     {
         if (isset($this->embedded[$rel])) {
-            return $this->normalizeData($this->embedded[$rel], function($embed) {
+            return $this->normalizeData($this->embedded[$rel], function ($embed) {
                 return [$embed];
             });
         }
@@ -178,7 +178,7 @@ final class Resource
             );
         }
 
-        return $this->normalizeData($this->links[$resolvedRel], function($link) {
+        return $this->normalizeData($this->links[$resolvedRel], function ($link) {
             return ['href' => $link];
         });
     }

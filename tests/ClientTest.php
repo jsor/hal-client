@@ -232,7 +232,7 @@ class ClientTest extends TestCase
     public function it_does_not_follow_location_for_created_response_with_non_empty_body()
     {
         $response = new Response(201, [
-            'Location' => 'http://propilex.herokuapp.com/resource',
+            'Location'     => 'http://propilex.herokuapp.com/resource',
             'Content-Type' => 'application/hal+json'
         ], '{"foo":"bar"}');
 
