@@ -24,7 +24,7 @@ final class Client implements ClientInterface
     {
         $this->httpClient = $httpClient ?: new Guzzle6HttpClient();
 
-        $this->factory = new Internal\ResourceFactory($this, $this->validContentTypes);
+        $this->factory = new Internal\ResourceFactory($this->validContentTypes);
 
         $this->defaultRequest = new GuzzlePsr7\Request('GET', $rootUrl, [
             'User-Agent' => self::class,
@@ -201,13 +201,13 @@ final class Client implements ClientInterface
                 return $response;
             }
 
-            return $this->factory->createResource($request, $response);
+            return $this->factory->createResource($this, $request, $response);
         }
 
         throw Exception\BadResponseException::create(
             $request,
             $response,
-            $this->factory->createResource($request, $response, true)
+            $this->factory->createResource($this, $request, $response, true)
         );
     }
 }

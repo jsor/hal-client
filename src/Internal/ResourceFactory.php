@@ -10,45 +10,48 @@ use Psr\Http\Message\ResponseInterface;
 
 final class ResourceFactory
 {
-    private $client;
     private $validContentTypes;
 
-    public function __construct(
-        ClientInterface $client,
-        array $validContentTypes
-    ) {
-        $this->client            = $client;
+    public function __construct(array $validContentTypes)
+    {
         $this->validContentTypes = $validContentTypes;
     }
 
     public function createResource(
+        ClientInterface $client,
         RequestInterface $request,
         ResponseInterface $response,
         $ignoreInvalidContentType = false
     ) {
         if (204 === $response->getStatusCode()) {
             // No-Content response
-            return new Resource($this->client);
+            return new Resource($client);
         }
 
-        $body = trim($this->fetchBody($request, $response));
+        $body = trim($this->fetchBody($client, $request, $response));
 
         if (201 === $response->getStatusCode() &&
             '' === $body &&
             $response->hasHeader('Location')) {
             // Created response with Location header
-            return $this->client->request('GET', $response->getHeader('Location')[0]);
+            return $client->request('GET', $response->getHeader('Location')[0]);
         }
 
         if (!$this->isValidContentType($response)) {
             return $this->handleInvalidContentType(
+                $client,
                 $request,
                 $response,
                 $ignoreInvalidContentType
             );
         }
 
-        return $this->handleValidContentType($request, $response, $body);
+        return $this->handleValidContentType(
+            $client,
+            $request,
+            $response,
+            $body
+        );
     }
 
     private function isValidContentType(ResponseInterface $response)
@@ -65,12 +68,13 @@ final class ResourceFactory
     }
 
     private function handleInvalidContentType(
+        ClientInterface $client,
         RequestInterface $request,
         ResponseInterface $response,
         $ignoreInvalidContentType
     ) {
         if ($ignoreInvalidContentType) {
-            return new Resource($this->client);
+            return new Resource($client);
         }
 
         $types = $response->getHeader('Content-Type') ?: ['none'];
@@ -82,25 +86,27 @@ final class ResourceFactory
             ),
             $request,
             $response,
-            new Resource($this->client)
+            new Resource($client)
         );
     }
 
     private function handleValidContentType(
+        ClientInterface $client,
         RequestInterface $request,
         ResponseInterface $response,
         $body
     ) {
         if ('' === $body) {
-            return new Resource($this->client);
+            return new Resource($client);
         }
 
-        $data = $this->decodeBody($request, $response, $body);
+        $data = $this->decodeBody($client, $request, $response, $body);
 
-        return Resource::fromArray($this->client, (array) $data);
+        return Resource::fromArray($client, (array) $data);
     }
 
     private function fetchBody(
+        ClientInterface $client,
         RequestInterface $request,
         ResponseInterface $response
     ) {
@@ -114,13 +120,14 @@ final class ResourceFactory
                 ),
                 $request,
                 $response,
-                new Resource($this->client),
+                new Resource($client),
                 $e
             );
         }
     }
 
     private function decodeBody(
+        ClientInterface $client,
         RequestInterface $request,
         ResponseInterface $response,
         $body
@@ -135,7 +142,7 @@ final class ResourceFactory
                 ),
                 $request,
                 $response,
-                new Resource($this->client)
+                new Resource($client)
             );
         }
 
