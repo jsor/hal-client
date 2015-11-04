@@ -8,6 +8,7 @@ Language (HAL) resources.
 [![Coverage Status](https://coveralls.io/repos/jsor/hal-client/badge.svg?branch=master&service=github)](https://coveralls.io/github/jsor/hal-client?branch=master)
 
 * [Installation](#installation)
+* [Usage](#usage)
 * [License](#license)
 
 Installation
