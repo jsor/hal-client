@@ -16,14 +16,6 @@ matrix:
       env: dependencies=lowest
     - php: hhvm
       env: dependencies=lowest
-    - php: 5.5
-      env: dependencies=highest
-    - php: 5.6
-      env: dependencies=highest
-    - php: 7
-      env: dependencies=highest
-    - php: hhvm
-      env: dependencies=highest
   fast_finish: true
 
 cache:
@@ -36,16 +28,15 @@ before_install:
   - if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN}; fi;
 
 install:
-  - if [ -z "$dependencies" ]; then travis_retry composer install; fi;
-  - if [ "$dependencies" = "lowest" ]; then travis_retry composer update --prefer-lowest -n; fi;
-  - if [ "$dependencies" = "highest" ]; then travis_retry composer update -n; fi;
-  - travis_retry composer require phpunit/phpunit:^4.7
-  - travis_retry composer require satooshi/php-coveralls:dev-master
+  - if [ -z "$dependencies" ]; then travis_retry composer install --no-interaction; fi;
+  - if [ "$dependencies" = "lowest" ]; then travis_retry composer update --prefer-lowest --no-interaction; fi;
   - composer show -i
+  - travis_retry composer require phpunit/phpunit:~4.7 --no-interaction;
 
 script:
   - vendor/bin/phpunit -v --coverage-text --coverage-clover=build/logs/clover.xml
 
 after_script:
+  - travis_retry composer require satooshi/php-coveralls:dev-master --no-interaction
   - if [ -f ./build/logs/clover.xml ]; then php vendor/bin/coveralls -v; fi
   - if [ -f ./build/logs/clover.xml ]; then wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml; fi
