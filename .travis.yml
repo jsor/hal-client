@@ -31,7 +31,6 @@ install:
   - if [ -z "$dependencies" ]; then travis_retry composer install --no-interaction; fi;
   - if [ "$dependencies" = "lowest" ]; then travis_retry composer update --prefer-lowest --no-interaction; fi;
   - composer show -i
-  - travis_retry composer require phpunit/phpunit:~4.7 --no-interaction;
 
 script:
   - vendor/bin/phpunit -v --coverage-text --coverage-clover=./build/logs/clover.xml
