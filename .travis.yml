@@ -34,9 +34,10 @@ install:
   - travis_retry composer require phpunit/phpunit:~4.7 --no-interaction;
 
 script:
-  - vendor/bin/phpunit -v --coverage-text --coverage-clover=build/logs/clover.xml
+  - vendor/bin/phpunit -v --coverage-text --coverage-clover=./build/logs/clover.xml
 
 after_script:
-  - travis_retry composer require satooshi/php-coveralls:dev-master --no-interaction
+  - if [ -f ./build/logs/clover.xml ]; then travis_retry composer require satooshi/php-coveralls:dev-master --no-interaction --update-with-dependencies; fi
   - if [ -f ./build/logs/clover.xml ]; then php vendor/bin/coveralls -v; fi
-  - if [ -f ./build/logs/clover.xml ]; then wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml; fi
+  - if [ -f ./build/logs/clover.xml ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
+  - if [ -f ./build/logs/clover.xml ]; then php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml; fi
