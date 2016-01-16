@@ -1,8 +1,9 @@
 HalClient
 =========
 
-A lightweight client for consuming and manipulating Hypertext Application
-Language (HAL) resources.
+A lightweight PHP client for consuming and manipulating
+[Hypertext Application Language (HAL)](https://tools.ietf.org/html/draft-kelly-json-hal)
+resources.
 
 [![Build Status](https://travis-ci.org/jsor/hal-client.svg?branch=master)](http://travis-ci.org/jsor/hal-client?branch=master)
 [![Coverage Status](https://coveralls.io/repos/jsor/hal-client/badge.svg?branch=master&service=github)](https://coveralls.io/github/jsor/hal-client?branch=master)
@@ -57,6 +58,20 @@ with every request.
 
 ```php
 $client = $client->withHeader('Authorization', 'Bearer 12345');
+```
+
+Note, that a client instance is [immutable](https://en.wikipedia.org/wiki/Immutable_object),
+which means, any call to change the state of the instance returns a **new**
+instance leaving the original instance unchanged.
+
+```php
+// Wrong!
+$client->withHeader('Authorization', '...');
+$resource = $client->get('/protected');
+
+// Correct!
+$client = $client->withHeader('Authorization', '...');
+$resource = $client->get('/protected');
 ```
 
 ### Browse the API
