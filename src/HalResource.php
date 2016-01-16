@@ -7,31 +7,31 @@ final class HalResource
     private $client;
     private $properties;
     private $links;
-    private $embedded;
+    private $resources;
 
     public function __construct(
         HalClientInterface $client,
         array $properties = [],
         array $links = [],
-        array $embedded = []
+        array $resources = []
     ) {
         $this->client     = $client;
         $this->properties = $properties;
         $this->links      = $links;
-        $this->embedded   = $embedded;
+        $this->resources  = $resources;
     }
 
     public static function fromArray(HalClientInterface $client, array $array)
     {
-        $links    = [];
-        $embedded = [];
+        $links     = [];
+        $resources = [];
 
         if (isset($array['_links'])) {
             $links = $array['_links'];
         }
 
         if (isset($array['_embedded'])) {
-            $embedded = $array['_embedded'];
+            $resources = $array['_embedded'];
         }
 
         unset($array['_links'], $array['_embedded']);
@@ -42,7 +42,7 @@ final class HalResource
             $client,
             $properties,
             $links,
-            $embedded
+            $resources
         );
     }
 
@@ -63,64 +63,6 @@ final class HalResource
         }
 
         return null;
-    }
-
-    public function hasEmbeds()
-    {
-        return count($this->embedded) > 0;
-    }
-
-    public function getEmbeds()
-    {
-        $all = [];
-
-        foreach ($this->embedded as $rel => $_) {
-            $all[$rel] = $this->getEmbed($rel);
-        }
-
-        return $all;
-    }
-
-    public function hasEmbed($name)
-    {
-        return isset($this->embedded[$name]);
-    }
-
-    /**
-     * @return Resource[]
-     */
-    public function getEmbed($rel)
-    {
-        return array_map(function ($data) {
-            return static::fromArray($this->client, $data);
-        }, $this->getEmbedData($rel));
-    }
-
-    public function getFirstEmbed($rel)
-    {
-        $embedded = $this->getEmbedData($rel);
-
-        if (!isset($embedded[0])) {
-            return null;
-        }
-
-        return static::fromArray($this->client, $embedded[0]);
-    }
-
-    private function getEmbedData($rel)
-    {
-        if (isset($this->embedded[$rel])) {
-            return $this->normalizeData($this->embedded[$rel], function ($embed) {
-                return [$embed];
-            });
-        }
-
-        throw new Exception\InvalidArgumentException(
-            sprintf(
-                'Unknown embedded %s.',
-                json_encode($rel)
-            )
-        );
     }
 
     public function hasLinks()
@@ -206,6 +148,64 @@ final class HalResource
         }
 
         return false;
+    }
+
+    public function hasResources()
+    {
+        return count($this->resources) > 0;
+    }
+
+    public function getResources()
+    {
+        $all = [];
+
+        foreach ($this->resources as $rel => $_) {
+            $all[$rel] = $this->getResource($rel);
+        }
+
+        return $all;
+    }
+
+    public function hasResource($name)
+    {
+        return isset($this->resources[$name]);
+    }
+
+    /**
+     * @return Resource[]
+     */
+    public function getResource($rel)
+    {
+        return array_map(function ($data) {
+            return static::fromArray($this->client, $data);
+        }, $this->getResourceData($rel));
+    }
+
+    public function getFirstResource($rel)
+    {
+        $resources = $this->getResourceData($rel);
+
+        if (!isset($resources[0])) {
+            return null;
+        }
+
+        return static::fromArray($this->client, $resources[0]);
+    }
+
+    private function getResourceData($rel)
+    {
+        if (isset($this->resources[$rel])) {
+            return $this->normalizeData($this->resources[$rel], function ($resource) {
+                return [$resource];
+            });
+        }
+
+        throw new Exception\InvalidArgumentException(
+            sprintf(
+                'Unknown resource %s.',
+                json_encode($rel)
+            )
+        );
     }
 
     private function normalizeData($data, callable $arrayNormalizer)

@@ -492,7 +492,6 @@ class HalClientTest extends TestCase
 
     /**
      * @test
-     * @group 123
      */
     public function it_can_browse()
     {
@@ -505,7 +504,7 @@ class HalClientTest extends TestCase
 
         $this->assertInstanceOf(HalResource::class, $resource);
         $this->assertEmpty($resource->getProperties());
-        $this->assertEmpty($resource->getEmbeds());
+        $this->assertEmpty($resource->getResources());
 
         $link = $resource->getFirstLink('documents');
 
@@ -535,7 +534,7 @@ class HalClientTest extends TestCase
         $this->assertEquals(10, $resource->getProperty('limit'));
         $this->assertEquals(1, $resource->getProperty('pages'));
 
-        $collection = $resource->getEmbed('documents');
+        $collection = $resource->getResource('documents');
 
         $this->assertInternalType('array', $collection);
 

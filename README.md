@@ -94,7 +94,7 @@ $documentsResource = $documentsLink->get();
 
 $totalDocuments = $documentsResource->getProperty('total');
 
-foreach ($resource->getEmbed('documents') as $document) {
+foreach ($resource->getResource('documents') as $document) {
     echo $document->getProperty('title') . PHP_EOL;
 }
 ```

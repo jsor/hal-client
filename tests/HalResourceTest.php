@@ -43,7 +43,7 @@ class HalResourceTest extends TestCase
     /**
      * @test
      */
-    public function it_extracts_embeds()
+    public function it_extracts_resources()
     {
         $httpClient = new RecordingHttpClient();
 
@@ -62,23 +62,23 @@ class HalResourceTest extends TestCase
             $data
         );
 
-        $this->assertTrue($resource->hasEmbeds());
-        $this->assertArrayHasKey('documents', $resource->getEmbeds());
+        $this->assertTrue($resource->hasResources());
+        $this->assertArrayHasKey('documents', $resource->getResources());
 
-        $this->assertTrue($resource->hasEmbed('documents'));
-        $this->assertCount(3, $resource->getEmbed('documents'));
-        $this->assertInstanceOf(HalResource::class, $resource->getFirstEmbed('documents'));
+        $this->assertTrue($resource->hasResource('documents'));
+        $this->assertCount(3, $resource->getResource('documents'));
+        $this->assertInstanceOf(HalResource::class, $resource->getFirstResource('documents'));
 
-        $this->assertNull($resource->getFirstEmbed('empty_array'));
+        $this->assertNull($resource->getFirstResource('empty_array'));
 
-        $this->assertCount(1, $resource->getEmbed('string_array'));
-        $this->assertSame('StringArray', $resource->getFirstEmbed('string_array')->getProperty(0));
+        $this->assertCount(1, $resource->getResource('string_array'));
+        $this->assertSame('StringArray', $resource->getFirstResource('string_array')->getProperty(0));
 
-        $this->assertCount(1, $resource->getEmbed('string'));
-        $this->assertSame('String', $resource->getFirstEmbed('string')->getProperty(0));
+        $this->assertCount(1, $resource->getResource('string'));
+        $this->assertSame('String', $resource->getFirstResource('string')->getProperty(0));
 
         $this->setExpectedException(InvalidArgumentException::class);
-        $resource->getEmbed('non_existing');
+        $resource->getResource('non_existing');
     }
 
     /**
