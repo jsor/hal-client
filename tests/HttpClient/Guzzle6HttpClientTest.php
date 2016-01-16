@@ -5,7 +5,7 @@ namespace Jsor\HalClient\HttpClient;
 use GuzzleHttp\ClientInterface as GuzzleClientInterface;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
 use GuzzleHttp\Psr7\Response;
-use Jsor\HalClient\Client;
+use Jsor\HalClient\HalClient;
 use Jsor\HalClient\TestCase;
 
 class Guzzle6HttpClientTest extends TestCase
@@ -24,7 +24,7 @@ class Guzzle6HttpClientTest extends TestCase
             ->method('send')
             ->will($this->returnValue($response));
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             new Guzzle6HttpClient($guzzleClient)
         );
@@ -47,7 +47,7 @@ class Guzzle6HttpClientTest extends TestCase
                 throw GuzzleRequestException::create($request);
             }));
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             new Guzzle6HttpClient($guzzleClient)
         );

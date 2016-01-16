@@ -2,7 +2,7 @@
 
 namespace Jsor\HalClient;
 
-class LinkTest extends TestCase
+class HalLinkTest extends TestCase
 {
     private $variables  = [
         'page'  => 1,
@@ -16,12 +16,12 @@ class LinkTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
 
-        $link = new Link(
+        $link = new HalLink(
             $client,
             '/documents{?page,limit}',
             true,
@@ -51,12 +51,12 @@ class LinkTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com/documents',
             $httpClient
         );
 
-        $link = new Link(
+        $link = new HalLink(
             $client,
             '/documents{?page,limit}',
             true,
@@ -91,12 +91,12 @@ class LinkTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com/documents',
             $httpClient
         );
 
-        $link = new Link(
+        $link = new HalLink(
             $client,
             '/documents{?page,limit}',
             true,
@@ -131,12 +131,12 @@ class LinkTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com/documents',
             $httpClient
         );
 
-        $link = new Link(
+        $link = new HalLink(
             $client,
             '/documents{?page,limit}',
             true,
@@ -171,12 +171,12 @@ class LinkTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com/documents',
             $httpClient
         );
 
-        $link = new Link(
+        $link = new HalLink(
             $client,
             '/documents{?page,limit}',
             true,
@@ -211,12 +211,12 @@ class LinkTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com/documents',
             $httpClient
         );
 
-        $link = new Link(
+        $link = new HalLink(
             $client,
             '/documents{?page,limit}',
             true,

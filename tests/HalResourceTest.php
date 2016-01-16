@@ -4,7 +4,7 @@ namespace Jsor\HalClient;
 
 use Jsor\HalClient\Exception\InvalidArgumentException;
 
-class ResourceTest extends TestCase
+class HalResourceTest extends TestCase
 {
     /**
      * @test
@@ -13,14 +13,14 @@ class ResourceTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
 
         $data = json_decode(file_get_contents(__DIR__ . '/fixtures/documents.json'), true);
 
-        $resource = Resource::fromArray(
+        $resource = HalResource::fromArray(
             $client,
             $data
         );
@@ -47,7 +47,7 @@ class ResourceTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -57,7 +57,7 @@ class ResourceTest extends TestCase
         $data['_embedded']['string_array'] = ['StringArray'];
         $data['_embedded']['string']       = 'String';
 
-        $resource = Resource::fromArray(
+        $resource = HalResource::fromArray(
             $client,
             $data
         );
@@ -67,7 +67,7 @@ class ResourceTest extends TestCase
 
         $this->assertTrue($resource->hasEmbed('documents'));
         $this->assertCount(3, $resource->getEmbed('documents'));
-        $this->assertInstanceOf(Resource::class, $resource->getFirstEmbed('documents'));
+        $this->assertInstanceOf(HalResource::class, $resource->getFirstEmbed('documents'));
 
         $this->assertNull($resource->getFirstEmbed('empty_array'));
 
@@ -88,7 +88,7 @@ class ResourceTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -98,7 +98,7 @@ class ResourceTest extends TestCase
         $data['_links']['string_array'] = ['StringArray'];
         $data['_links']['string']       = 'String';
 
-        $resource = Resource::fromArray(
+        $resource = HalResource::fromArray(
             $client,
             $data
         );
@@ -108,7 +108,7 @@ class ResourceTest extends TestCase
 
         $this->assertTrue($resource->hasLink('self'));
         $this->assertCount(1, $resource->getLink('self'));
-        $this->assertInstanceOf(Link::class, $resource->getFirstLink('self'));
+        $this->assertInstanceOf(HalLink::class, $resource->getFirstLink('self'));
 
         $this->assertNull($resource->getFirstLink('empty_array'));
 
@@ -130,7 +130,7 @@ class ResourceTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -138,18 +138,18 @@ class ResourceTest extends TestCase
         $data                     = json_decode(file_get_contents(__DIR__ . '/fixtures/documents.json'), true);
         $data['_links']['curies'] = array_merge(['Curie'], $data['_links']['curies']);
 
-        $resource = Resource::fromArray(
+        $resource = HalResource::fromArray(
             $client,
             $data
         );
 
         $this->assertTrue($resource->hasLink('documents'));
         $this->assertCount(1, $resource->getLink('documents'));
-        $this->assertInstanceOf(Link::class, $resource->getFirstLink('documents'));
+        $this->assertInstanceOf(HalLink::class, $resource->getFirstLink('documents'));
 
         $this->assertTrue($resource->hasLink('p:documents'));
         $this->assertCount(1, $resource->getLink('p:documents'));
-        $this->assertInstanceOf(Link::class, $resource->getFirstLink('p:documents'));
+        $this->assertInstanceOf(HalLink::class, $resource->getFirstLink('p:documents'));
     }
 
     /**
@@ -159,12 +159,12 @@ class ResourceTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
 
-        $resource = new Resource(
+        $resource = new HalResource(
             $client,
             [],
             [
@@ -197,12 +197,12 @@ class ResourceTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
 
-        $resource = new Resource(
+        $resource = new HalResource(
             $client,
             [],
             [
@@ -235,12 +235,12 @@ class ResourceTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
 
-        $resource = new Resource(
+        $resource = new HalResource(
             $client,
             [],
             [
@@ -273,12 +273,12 @@ class ResourceTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
 
-        $resource = new Resource(
+        $resource = new HalResource(
             $client,
             [],
             [
@@ -311,12 +311,12 @@ class ResourceTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
 
-        $resource = new Resource(
+        $resource = new HalResource(
             $client,
             [],
             [

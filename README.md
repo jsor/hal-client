@@ -45,12 +45,12 @@ endpoint.
 
 ### Create the client
 
-At a first step, we setup a `Client` instance.
+At a first step, we setup a `HalClient` instance.
 
 ```php
-use Jsor\HalClient\Client;
+use Jsor\HalClient\HalClient;
 
-$client = new Client('http://propilex.herokuapp.com');
+$client = new HalClient('http://propilex.herokuapp.com');
 ```
 
 We can now set additional headers (eg. an Authorization header) which are sent
@@ -79,7 +79,7 @@ $resource = $client->get('/protected');
 To start browsing through the API, we first get the root resource.
 
 ```php
-/** @var \Jsor\HalClient\Resource $rootResource */
+/** @var \Jsor\HalClient\HalResource $rootResource */
 $rootResource = $client->root();
 ```
 
@@ -87,7 +87,7 @@ We now follow the `p:documents` link.
 
 
 ```php
-/** @var \Jsor\HalClient\Link $documentsLink */
+/** @var \Jsor\HalClient\HalLink $documentsLink */
 $documentsLink = $rootResource->getFirstLink('documents');
 
 $documentsResource = $documentsLink->get();

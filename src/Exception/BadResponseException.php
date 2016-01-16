@@ -2,11 +2,11 @@
 
 namespace Jsor\HalClient\Exception;
 
-use Jsor\HalClient\Resource;
+use Jsor\HalClient\HalResource;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class BadResponseException extends \RuntimeException implements Exception
+class BadResponseException extends \RuntimeException implements ExceptionInterface
 {
     private $request;
     private $response;
@@ -16,7 +16,7 @@ class BadResponseException extends \RuntimeException implements Exception
         $message,
         RequestInterface $request,
         ResponseInterface $response,
-        Resource $resource,
+        HalResource $resource,
         \Exception $previous = null
     ) {
         $code = $response ? $response->getStatusCode() : 0;
@@ -31,7 +31,7 @@ class BadResponseException extends \RuntimeException implements Exception
     public static function create(
         RequestInterface $request,
         ResponseInterface $response,
-        Resource $resource,
+        HalResource $resource,
         \Exception $previous = null,
         $message = null
     ) {

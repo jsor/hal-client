@@ -2,7 +2,7 @@
 
 namespace Jsor\HalClient;
 
-interface ClientInterface
+interface HalClientInterface
 {
     public function getRootUrl();
 

@@ -2,13 +2,13 @@
 
 namespace Jsor\HalClient\Internal;
 
-use Jsor\HalClient\ClientInterface;
+use Jsor\HalClient\HalClientInterface;
 use Jsor\HalClient\Exception;
-use Jsor\HalClient\Resource;
+use Jsor\HalClient\HalResource;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-final class ResourceFactory
+final class HalResourceFactory
 {
     private $validContentTypes;
 
@@ -18,14 +18,14 @@ final class ResourceFactory
     }
 
     public function createResource(
-        ClientInterface $client,
+        HalClientInterface $client,
         RequestInterface $request,
         ResponseInterface $response,
         $ignoreInvalidContentType = false
     ) {
         if (204 === $response->getStatusCode()) {
             // No-Content response
-            return new Resource($client);
+            return new HalResource($client);
         }
 
         $body = trim($this->fetchBody($client, $request, $response));
@@ -68,13 +68,13 @@ final class ResourceFactory
     }
 
     private function handleInvalidContentType(
-        ClientInterface $client,
+        HalClientInterface $client,
         RequestInterface $request,
         ResponseInterface $response,
         $ignoreInvalidContentType
     ) {
         if ($ignoreInvalidContentType) {
-            return new Resource($client);
+            return new HalResource($client);
         }
 
         $types = $response->getHeader('Content-Type') ?: ['none'];
@@ -86,27 +86,27 @@ final class ResourceFactory
             ),
             $request,
             $response,
-            new Resource($client)
+            new HalResource($client)
         );
     }
 
     private function handleValidContentType(
-        ClientInterface $client,
+        HalClientInterface $client,
         RequestInterface $request,
         ResponseInterface $response,
         $body
     ) {
         if ('' === $body) {
-            return new Resource($client);
+            return new HalResource($client);
         }
 
         $data = $this->decodeBody($client, $request, $response, $body);
 
-        return Resource::fromArray($client, (array) $data);
+        return HalResource::fromArray($client, (array) $data);
     }
 
     private function fetchBody(
-        ClientInterface $client,
+        HalClientInterface $client,
         RequestInterface $request,
         ResponseInterface $response
     ) {
@@ -120,14 +120,14 @@ final class ResourceFactory
                 ),
                 $request,
                 $response,
-                new Resource($client),
+                new HalResource($client),
                 $e
             );
         }
     }
 
     private function decodeBody(
-        ClientInterface $client,
+        HalClientInterface $client,
         RequestInterface $request,
         ResponseInterface $response,
         $body
@@ -142,7 +142,7 @@ final class ResourceFactory
                 ),
                 $request,
                 $response,
-                new Resource($client)
+                new HalResource($client)
             );
         }
 

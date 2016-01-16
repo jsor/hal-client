@@ -8,7 +8,7 @@ use Jsor\HalClient\HttpClient\HttpClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-final class Client implements ClientInterface
+final class HalClient implements HalClientInterface
 {
     private $httpClient;
     private $factory;
@@ -24,7 +24,7 @@ final class Client implements ClientInterface
     {
         $this->httpClient = $httpClient ?: new Guzzle6HttpClient();
 
-        $this->factory = new Internal\ResourceFactory(self::$validContentTypes);
+        $this->factory = new Internal\HalResourceFactory(self::$validContentTypes);
 
         $this->defaultRequest = new GuzzlePsr7\Request('GET', $rootUrl, [
             'User-Agent' => self::class,

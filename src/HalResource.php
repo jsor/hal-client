@@ -2,7 +2,7 @@
 
 namespace Jsor\HalClient;
 
-final class Resource
+final class HalResource
 {
     private $client;
     private $properties;
@@ -10,7 +10,7 @@ final class Resource
     private $embedded;
 
     public function __construct(
-        ClientInterface $client,
+        HalClientInterface $client,
         array $properties = [],
         array $links = [],
         array $embedded = []
@@ -21,7 +21,7 @@ final class Resource
         $this->embedded   = $embedded;
     }
 
-    public static function fromArray(ClientInterface $client, array $array)
+    public static function fromArray(HalClientInterface $client, array $array)
     {
         $links    = [];
         $embedded = [];
@@ -145,12 +145,12 @@ final class Resource
     }
 
     /**
-     * @return Link[]
+     * @return HalLink[]
      */
     public function getLink($rel)
     {
         return array_map(function ($link) {
-            return Link::fromArray($this->client, $link);
+            return HalLink::fromArray($this->client, $link);
         }, $this->getLinkData($rel));
     }
 
@@ -162,7 +162,7 @@ final class Resource
             return null;
         }
 
-        return Link::fromArray($this->client, $link[0]);
+        return HalLink::fromArray($this->client, $link[0]);
     }
 
     private function getLinkData($rel)

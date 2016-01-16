@@ -4,7 +4,7 @@ namespace Jsor\HalClient;
 
 use GuzzleHttp;
 
-final class Link
+final class HalLink
 {
     private $client;
     private $href;
@@ -17,7 +17,7 @@ final class Link
     private $hreflang;
 
     public function __construct(
-        ClientInterface $client,
+        HalClientInterface $client,
         $href,
         $templated = null,
         $type = null,
@@ -38,7 +38,7 @@ final class Link
         $this->hreflang    = $hreflang;
     }
 
-    public static function fromArray(ClientInterface $client, array $array)
+    public static function fromArray(HalClientInterface $client, array $array)
     {
         $array = array_replace([
             'href'        => null,

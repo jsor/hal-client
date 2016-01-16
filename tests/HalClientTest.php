@@ -9,7 +9,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-class ClientTest extends TestCase
+class HalClientTest extends TestCase
 {
     /**
      * @test
@@ -18,16 +18,16 @@ class ClientTest extends TestCase
     {
         $httpClient = new FixtureHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
 
         $cloned = clone $client;
 
-        $httpClientReflProp = new \ReflectionProperty(Client::class, 'httpClient');
+        $httpClientReflProp = new \ReflectionProperty(HalClient::class, 'httpClient');
         $httpClientReflProp->setAccessible(true);
-        $defaultRequestReflProp = new \ReflectionProperty(Client::class, 'defaultRequest');
+        $defaultRequestReflProp = new \ReflectionProperty(HalClient::class, 'defaultRequest');
         $defaultRequestReflProp->setAccessible(true);
 
         $this->assertNotSame($httpClientReflProp->getValue($client), $httpClientReflProp->getValue($cloned));
@@ -55,7 +55,7 @@ class ClientTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -85,7 +85,7 @@ class ClientTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -115,7 +115,7 @@ class ClientTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -145,7 +145,7 @@ class ClientTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -175,7 +175,7 @@ class ClientTest extends TestCase
     {
         $httpClient = new RecordingHttpClient();
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -216,7 +216,7 @@ class ClientTest extends TestCase
                 $response2
             ));
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -243,7 +243,7 @@ class ClientTest extends TestCase
             ->method('send')
             ->will($this->returnValue($response));
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -267,7 +267,7 @@ class ClientTest extends TestCase
             ->method('send')
             ->will($this->returnValue($response));
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -303,7 +303,7 @@ class ClientTest extends TestCase
             ->method('send')
             ->will($this->throwException($exception));
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -332,7 +332,7 @@ class ClientTest extends TestCase
             ->method('send')
             ->will($this->returnValue(new Response(404, ['Content-Type' => 'application/hal+json'], '{"msg":"error"}')));
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -342,7 +342,7 @@ class ClientTest extends TestCase
         } catch (BadResponseException $e) {
             $this->assertInstanceOf(RequestInterface::class, $e->getRequest());
             $this->assertInstanceOf(ResponseInterface::class, $e->getResponse());
-            $this->assertInstanceOf(Resource::class, $e->getResource());
+            $this->assertInstanceOf(HalResource::class, $e->getResource());
             $this->assertFalse($e->getResource()->hasLink('self'));
             $this->assertTrue($e->isClientError());
             $this->assertFalse($e->isServerError());
@@ -365,7 +365,7 @@ class ClientTest extends TestCase
             ->method('send')
             ->will($this->returnValue(new Response(500, ['Content-Type' => 'application/hal+json'], '{"msg":"error"}')));
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -375,7 +375,7 @@ class ClientTest extends TestCase
         } catch (BadResponseException $e) {
             $this->assertInstanceOf(RequestInterface::class, $e->getRequest());
             $this->assertInstanceOf(ResponseInterface::class, $e->getResponse());
-            $this->assertInstanceOf(Resource::class, $e->getResource());
+            $this->assertInstanceOf(HalResource::class, $e->getResource());
             $this->assertFalse($e->getResource()->hasLink('self'));
             $this->assertFalse($e->isClientError());
             $this->assertTrue($e->isServerError());
@@ -398,7 +398,7 @@ class ClientTest extends TestCase
             ->method('send')
             ->will($this->returnValue(new Response(303, ['Content-Type' => 'application/hal+json'], '{"msg":"error"}')));
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -408,7 +408,7 @@ class ClientTest extends TestCase
         } catch (BadResponseException $e) {
             $this->assertInstanceOf(RequestInterface::class, $e->getRequest());
             $this->assertInstanceOf(ResponseInterface::class, $e->getResponse());
-            $this->assertInstanceOf(Resource::class, $e->getResource());
+            $this->assertInstanceOf(HalResource::class, $e->getResource());
             $this->assertFalse($e->getResource()->hasLink('self'));
             $this->assertFalse($e->isClientError());
             $this->assertFalse($e->isServerError());
@@ -431,7 +431,7 @@ class ClientTest extends TestCase
             ->method('send')
             ->will($this->returnValue(new Response(200, ['Content-Type' => 'text/plain'])));
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -460,7 +460,7 @@ class ClientTest extends TestCase
             ->method('send')
             ->will($this->returnValue(new Response(200, ['Content-Type' => 'application/hal+json'], $stream)));
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -482,7 +482,7 @@ class ClientTest extends TestCase
             ->method('send')
             ->will($this->returnValue(new Response(200, ['Content-Type' => 'application/hal+json'], '{')));
 
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             $httpClient
         );
@@ -496,20 +496,20 @@ class ClientTest extends TestCase
      */
     public function it_can_browse()
     {
-        $client = new Client(
+        $client = new HalClient(
             'http://propilex.herokuapp.com',
             new FixtureHttpClient()
         );
 
         $resource = $client->root();
 
-        $this->assertInstanceOf(Resource::class, $resource);
+        $this->assertInstanceOf(HalResource::class, $resource);
         $this->assertEmpty($resource->getProperties());
         $this->assertEmpty($resource->getEmbeds());
 
         $link = $resource->getFirstLink('documents');
 
-        $this->assertInstanceOf(Link::class, $link);
+        $this->assertInstanceOf(HalLink::class, $link);
 
         $this->assertEquals($link->getHref(), 'http://propilex.herokuapp.com/documents');
 
@@ -521,7 +521,7 @@ class ClientTest extends TestCase
             ]
         ]);
 
-        $this->assertInstanceOf(Resource::class, $resource);
+        $this->assertInstanceOf(HalResource::class, $resource);
 
         $expected = [
             'page'  => 1,
@@ -542,7 +542,7 @@ class ClientTest extends TestCase
         $this->assertCount(3, $collection);
 
         foreach ($collection as $child) {
-            $this->assertInstanceOf(Resource::class, $child);
+            $this->assertInstanceOf(HalResource::class, $child);
             $this->assertNotNull($child->getProperty('title'));
             $this->assertNotNull($child->getProperty('body'));
             $this->assertNotNull($child->getProperty('id'));
