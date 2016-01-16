@@ -2,8 +2,8 @@
 
 namespace Jsor\HalClient\Internal;
 
-use Jsor\HalClient\HalClientInterface;
 use Jsor\HalClient\Exception;
+use Jsor\HalClient\HalClientInterface;
 use Jsor\HalClient\HalResource;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
