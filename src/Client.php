@@ -14,7 +14,7 @@ final class Client implements ClientInterface
     private $factory;
     private $defaultRequest;
 
-    private $validContentTypes = [
+    private static $validContentTypes = [
         'application/hal+json',
         'application/json',
         'application/vnd.error+json'
@@ -24,11 +24,11 @@ final class Client implements ClientInterface
     {
         $this->httpClient = $httpClient ?: new Guzzle6HttpClient();
 
-        $this->factory = new Internal\ResourceFactory($this->validContentTypes);
+        $this->factory = new Internal\ResourceFactory(self::$validContentTypes);
 
         $this->defaultRequest = new GuzzlePsr7\Request('GET', $rootUrl, [
             'User-Agent' => self::class,
-            'Accept'     => implode(', ', $this->validContentTypes)
+            'Accept'     => implode(', ', self::$validContentTypes)
         ]);
     }
 
