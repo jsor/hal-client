@@ -69,7 +69,7 @@ final class HalLink
         $uri = (string) $this->href;
 
         if (true === $this->templated) {
-            $uri = GuzzleHttp\uri_template($uri, $variables);
+            $uri = self::expandUriTemplate($uri, $variables);
         }
 
         return $uri;
@@ -141,6 +141,33 @@ final class HalLink
             $method,
             $this->getUri($variables),
             $options
+        );
+    }
+
+    private static function expandUriTemplate($template, $variables)
+    {
+        static $guzzleUriTemplate;
+
+        if (function_exists('\uri_template')) {
+            // @codeCoverageIgnoreStart
+            return \uri_template($template, $variables);
+            // @codeCoverageIgnoreEnd
+        }
+
+        if (class_exists('\GuzzleHttp\UriTemplate')) {
+            if (!$guzzleUriTemplate) {
+                $guzzleUriTemplate = new \GuzzleHttp\UriTemplate();
+            }
+
+            return $guzzleUriTemplate->expand($template, $variables);
+        }
+
+        throw new \RuntimeException(
+            'Could not detect supported method for expanding URI templates. ' .
+            'You should either provide a global \uri_template function ' .
+            '(e.g. by installing the uri_template extension from ' .
+            'https://github.com/ioseb/uri-template) or by installing the ' .
+            'guzzlehttp/guzzle package (version ~5.0 or ~6.0) via Composer.'
         );
     }
 }
