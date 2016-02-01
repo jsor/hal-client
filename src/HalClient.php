@@ -27,7 +27,7 @@ final class HalClient implements HalClientInterface
         $this->factory = new Internal\HalResourceFactory(self::$validContentTypes);
 
         $this->defaultRequest = new GuzzlePsr7\Request('GET', $rootUrl, [
-            'User-Agent' => self::class,
+            'User-Agent' => get_class($this),
             'Accept'     => implode(', ', self::$validContentTypes)
         ]);
     }

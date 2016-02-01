@@ -67,7 +67,7 @@ class HalResourceTest extends TestCase
 
         $this->assertTrue($resource->hasResource('documents'));
         $this->assertCount(3, $resource->getResource('documents'));
-        $this->assertInstanceOf(HalResource::class, $resource->getFirstResource('documents'));
+        $this->assertInstanceOf('Jsor\HalClient\HalResource', $resource->getFirstResource('documents'));
 
         $this->assertNull($resource->getFirstResource('empty_array'));
 
@@ -77,7 +77,7 @@ class HalResourceTest extends TestCase
         $this->assertCount(1, $resource->getResource('string'));
         $this->assertSame('String', $resource->getFirstResource('string')->getProperty(0));
 
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->setExpectedException('Jsor\HalClient\Exception\InvalidArgumentException');
         $resource->getResource('non_existing');
     }
 
@@ -108,7 +108,7 @@ class HalResourceTest extends TestCase
 
         $this->assertTrue($resource->hasLink('self'));
         $this->assertCount(1, $resource->getLink('self'));
-        $this->assertInstanceOf(HalLink::class, $resource->getFirstLink('self'));
+        $this->assertInstanceOf('Jsor\HalClient\HalLink', $resource->getFirstLink('self'));
 
         $this->assertNull($resource->getFirstLink('empty_array'));
 
@@ -119,7 +119,7 @@ class HalResourceTest extends TestCase
         $this->assertSame('String', $resource->getFirstLink('string')->getHref());
 
         $this->assertFalse($resource->hasLink('non_existing'));
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->setExpectedException('Jsor\HalClient\Exception\InvalidArgumentException');
         $resource->getLink('non_existing');
     }
 
@@ -145,11 +145,11 @@ class HalResourceTest extends TestCase
 
         $this->assertTrue($resource->hasLink('documents'));
         $this->assertCount(1, $resource->getLink('documents'));
-        $this->assertInstanceOf(HalLink::class, $resource->getFirstLink('documents'));
+        $this->assertInstanceOf('Jsor\HalClient\HalLink', $resource->getFirstLink('documents'));
 
         $this->assertTrue($resource->hasLink('p:documents'));
         $this->assertCount(1, $resource->getLink('p:documents'));
-        $this->assertInstanceOf(HalLink::class, $resource->getFirstLink('p:documents'));
+        $this->assertInstanceOf('Jsor\HalClient\HalLink', $resource->getFirstLink('p:documents'));
     }
 
     /**

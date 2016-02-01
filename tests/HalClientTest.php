@@ -25,9 +25,9 @@ class HalClientTest extends TestCase
 
         $cloned = clone $client;
 
-        $httpClientReflProp = new \ReflectionProperty(HalClient::class, 'httpClient');
+        $httpClientReflProp = new \ReflectionProperty('Jsor\HalClient\HalClient', 'httpClient');
         $httpClientReflProp->setAccessible(true);
-        $defaultRequestReflProp = new \ReflectionProperty(HalClient::class, 'defaultRequest');
+        $defaultRequestReflProp = new \ReflectionProperty('Jsor\HalClient\HalClient', 'defaultRequest');
         $defaultRequestReflProp->setAccessible(true);
 
         $this->assertNotSame($httpClientReflProp->getValue($client), $httpClientReflProp->getValue($cloned));
@@ -206,7 +206,7 @@ class HalClientTest extends TestCase
         $response1 = new Response(201, ['Location' => 'http://propilex.herokuapp.com/resource']);
         $response2 = new Response(200, ['Content-Type' => 'application/hal+json'], '{"foo":"bar"}');
 
-        $httpClient = $this->getMock(HttpClientInterface::class);
+        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
 
         $httpClient
             ->expects($this->exactly(2))
@@ -236,7 +236,7 @@ class HalClientTest extends TestCase
             'Content-Type' => 'application/hal+json'
         ], '{"foo":"bar"}');
 
-        $httpClient = $this->getMock(HttpClientInterface::class);
+        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
 
         $httpClient
             ->expects($this->once())
@@ -260,7 +260,7 @@ class HalClientTest extends TestCase
     {
         $response = new Response(200);
 
-        $httpClient = $this->getMock(HttpClientInterface::class);
+        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
 
         $httpClient
             ->expects($this->once())
@@ -296,7 +296,7 @@ class HalClientTest extends TestCase
     {
         $exception = new \Exception('Error');
 
-        $httpClient = $this->getMock(HttpClientInterface::class);
+        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
 
         $httpClient
             ->expects($this->once())
@@ -312,7 +312,7 @@ class HalClientTest extends TestCase
             $client->request('GET', '/');
         } catch (\Exception $e) {
             $this->assertSame($exception, $e->getPrevious());
-            $this->assertInstanceOf(RequestInterface::class, $e->getRequest());
+            $this->assertInstanceOf('Psr\Http\Message\RequestInterface', $e->getRequest());
 
             throw $e;
         }
@@ -325,7 +325,7 @@ class HalClientTest extends TestCase
      */
     public function it_throws_exception_when_http_client_returns_client_error()
     {
-        $httpClient = $this->getMock(HttpClientInterface::class);
+        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
 
         $httpClient
             ->expects($this->once())
@@ -340,9 +340,9 @@ class HalClientTest extends TestCase
         try {
             $client->request('GET', '/');
         } catch (BadResponseException $e) {
-            $this->assertInstanceOf(RequestInterface::class, $e->getRequest());
-            $this->assertInstanceOf(ResponseInterface::class, $e->getResponse());
-            $this->assertInstanceOf(HalResource::class, $e->getResource());
+            $this->assertInstanceOf('Psr\Http\Message\RequestInterface', $e->getRequest());
+            $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $e->getResponse());
+            $this->assertInstanceOf('Jsor\HalClient\HalResource', $e->getResource());
             $this->assertFalse($e->getResource()->hasLink('self'));
             $this->assertTrue($e->isClientError());
             $this->assertFalse($e->isServerError());
@@ -358,7 +358,7 @@ class HalClientTest extends TestCase
      */
     public function it_throws_exception_when_http_client_returns_server_error()
     {
-        $httpClient = $this->getMock(HttpClientInterface::class);
+        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
 
         $httpClient
             ->expects($this->once())
@@ -373,9 +373,9 @@ class HalClientTest extends TestCase
         try {
             $client->request('GET', '/');
         } catch (BadResponseException $e) {
-            $this->assertInstanceOf(RequestInterface::class, $e->getRequest());
-            $this->assertInstanceOf(ResponseInterface::class, $e->getResponse());
-            $this->assertInstanceOf(HalResource::class, $e->getResource());
+            $this->assertInstanceOf('Psr\Http\Message\RequestInterface', $e->getRequest());
+            $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $e->getResponse());
+            $this->assertInstanceOf('Jsor\HalClient\HalResource', $e->getResource());
             $this->assertFalse($e->getResource()->hasLink('self'));
             $this->assertFalse($e->isClientError());
             $this->assertTrue($e->isServerError());
@@ -391,7 +391,7 @@ class HalClientTest extends TestCase
      */
     public function it_throws_exception_when_http_client_returns_unsuccessful_response()
     {
-        $httpClient = $this->getMock(HttpClientInterface::class);
+        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
 
         $httpClient
             ->expects($this->once())
@@ -406,9 +406,9 @@ class HalClientTest extends TestCase
         try {
             $client->request('GET', '/');
         } catch (BadResponseException $e) {
-            $this->assertInstanceOf(RequestInterface::class, $e->getRequest());
-            $this->assertInstanceOf(ResponseInterface::class, $e->getResponse());
-            $this->assertInstanceOf(HalResource::class, $e->getResource());
+            $this->assertInstanceOf('Psr\Http\Message\RequestInterface', $e->getRequest());
+            $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $e->getResponse());
+            $this->assertInstanceOf('Jsor\HalClient\HalResource', $e->getResource());
             $this->assertFalse($e->getResource()->hasLink('self'));
             $this->assertFalse($e->isClientError());
             $this->assertFalse($e->isServerError());
@@ -424,7 +424,7 @@ class HalClientTest extends TestCase
      */
     public function it_throws_exception_for_invalid_content_type()
     {
-        $httpClient = $this->getMock(HttpClientInterface::class);
+        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
 
         $httpClient
             ->expects($this->once())
@@ -446,14 +446,14 @@ class HalClientTest extends TestCase
      */
     public function it_throws_exception_when_getting_response_body_throws()
     {
-        $stream = $this->getMock(StreamInterface::class);
+        $stream = $this->getMock('Psr\Http\Message\StreamInterface');
 
         $stream
             ->expects($this->once())
             ->method('getContents')
             ->will($this->throwException(new \Exception('Error')));
 
-        $httpClient = $this->getMock(HttpClientInterface::class);
+        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
 
         $httpClient
             ->expects($this->once())
@@ -471,11 +471,11 @@ class HalClientTest extends TestCase
     /**
      * @test
      * @expectedException \Jsor\HalClient\Exception\BadResponseException
-     * @expectedExceptionMessage JSON parse error: Syntax error.
+     * @expectedExceptionMessage JSON parse error: Syntax error
      */
     public function it_throws_exception_when_http_client_returns_invalid_json()
     {
-        $httpClient = $this->getMock(HttpClientInterface::class);
+        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
 
         $httpClient
             ->expects($this->once())
@@ -502,13 +502,13 @@ class HalClientTest extends TestCase
 
         $resource = $client->root();
 
-        $this->assertInstanceOf(HalResource::class, $resource);
+        $this->assertInstanceOf('Jsor\HalClient\HalResource', $resource);
         $this->assertEmpty($resource->getProperties());
         $this->assertEmpty($resource->getResources());
 
         $link = $resource->getFirstLink('documents');
 
-        $this->assertInstanceOf(HalLink::class, $link);
+        $this->assertInstanceOf('Jsor\HalClient\HalLink', $link);
 
         $this->assertEquals($link->getHref(), 'http://propilex.herokuapp.com/documents');
 
@@ -520,7 +520,7 @@ class HalClientTest extends TestCase
             ]
         ]);
 
-        $this->assertInstanceOf(HalResource::class, $resource);
+        $this->assertInstanceOf('Jsor\HalClient\HalResource', $resource);
 
         $expected = [
             'page'  => 1,
@@ -541,7 +541,7 @@ class HalClientTest extends TestCase
         $this->assertCount(3, $collection);
 
         foreach ($collection as $child) {
-            $this->assertInstanceOf(HalResource::class, $child);
+            $this->assertInstanceOf('Jsor\HalClient\HalResource', $child);
             $this->assertNotNull($child->getProperty('title'));
             $this->assertNotNull($child->getProperty('body'));
             $this->assertNotNull($child->getProperty('id'));

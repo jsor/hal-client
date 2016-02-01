@@ -10,6 +10,13 @@ use Jsor\HalClient\TestCase;
 
 class Guzzle6HttpClientTest extends TestCase
 {
+    public function setUp()
+    {
+        if (version_compare(GuzzleClientInterface::VERSION, '6.0') < 0) {
+            $this->markTestIncomplete('GuzzleHttp version ~6.0 installed.');
+        }
+    }
+    
     /**
      * @test
      */
@@ -17,7 +24,7 @@ class Guzzle6HttpClientTest extends TestCase
     {
         $response = new Response(200, ['Content-Type' => 'application/hal+json']);
 
-        $guzzleClient = $this->getMock(GuzzleClientInterface::class);
+        $guzzleClient = $this->getMock('GuzzleHttp\ClientInterface');
 
         $guzzleClient
             ->expects($this->once())
@@ -38,7 +45,7 @@ class Guzzle6HttpClientTest extends TestCase
      */
     public function it_will_transform_exception()
     {
-        $guzzleClient = $this->getMock(GuzzleClientInterface::class);
+        $guzzleClient = $this->getMock('GuzzleHttp\ClientInterface');
 
         $guzzleClient
             ->expects($this->once())
