@@ -17,8 +17,7 @@
         "guzzlehttp/psr7": "~1.0"
     },
     "require-dev": {
-        "guzzlehttp/guzzle": "~5.0|~6.0",
-        "phpunit/phpunit": "^4.8"
+        "guzzlehttp/guzzle": "~5.0|~6.0"
     },
     "suggest": {
         "guzzlehttp/guzzle": "For using the Guzzle6HttpClient"
