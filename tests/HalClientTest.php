@@ -4,10 +4,6 @@ namespace Jsor\HalClient;
 
 use GuzzleHttp\Psr7\Response;
 use Jsor\HalClient\Exception\BadResponseException;
-use Jsor\HalClient\HttpClient\HttpClientInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
 
 class HalClientTest extends TestCase
 {

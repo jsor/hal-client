@@ -2,8 +2,6 @@
 
 namespace Jsor\HalClient;
 
-use Jsor\HalClient\Exception\InvalidArgumentException;
-
 class HalResourceTest extends TestCase
 {
     /**

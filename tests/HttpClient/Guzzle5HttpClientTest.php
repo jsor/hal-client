@@ -18,7 +18,7 @@ class Guzzle5HttpClientTest extends TestCase
             $this->markTestIncomplete('GuzzleHttp version other than ~5.0 installed (Installed version ' . GuzzleClientInterface::VERSION . ').');
         }
     }
-    
+
     /**
      * @test
      */
