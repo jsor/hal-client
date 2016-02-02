@@ -12,6 +12,10 @@ matrix:
     - php: 5.4
       env: dependencies=lowest
     - php: 7.0
+      env: dependencies=lowest
+    - php: 5.4
+      env: dependencies=highest
+    - php: 7.0
       env: dependencies=highest
   fast_finish: true
 

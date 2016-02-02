@@ -3,6 +3,7 @@
 namespace Jsor\HalClient;
 
 use GuzzleHttp\Psr7 as GuzzlePsr7;
+use Jsor\HalClient\HttpClient\Guzzle5HttpClient;
 use Jsor\HalClient\HttpClient\Guzzle6HttpClient;
 use Jsor\HalClient\HttpClient\HttpClientInterface;
 use Psr\Http\Message\RequestInterface;
@@ -22,7 +23,7 @@ final class HalClient implements HalClientInterface
 
     public function __construct($rootUrl, HttpClientInterface $httpClient = null)
     {
-        $this->httpClient = $httpClient ?: new Guzzle6HttpClient();
+        $this->httpClient = $httpClient ?: self::createDefaultHttpClient();
 
         $this->factory = new Internal\HalResourceFactory(self::$validContentTypes);
 
@@ -209,5 +210,33 @@ final class HalClient implements HalClientInterface
             $response,
             $this->factory->createResource($this, $request, $response, true)
         );
+    }
+
+    private static function createDefaultHttpClient()
+    {
+        // @codeCoverageIgnoreStart
+        if (!interface_exists('GuzzleHttp\ClientInterface')) {
+            throw new \RuntimeException(
+                'Cannot create default HttpClient because guzzlehttp/guzzle is not installed.' .
+                'Install with `composer require guzzlehttp/guzzle:"~5.0|~6.0"`.'
+            );
+        }
+        // @codeCoverageIgnoreEnd
+
+        switch (substr(\GuzzleHttp\ClientInterface::VERSION, 0, 1)) {
+            case '5':
+                return new Guzzle5HttpClient();
+            case '6':
+                return new Guzzle6HttpClient();
+            // @codeCoverageIgnoreStart
+            default:
+                throw new \RuntimeException(
+                    sprintf(
+                        'Unsupported GuzzleHttp\Client version %s.',
+                        \GuzzleHttp\ClientInterface::VERSION
+                    )
+                );
+            // @codeCoverageIgnoreEnd
+        }
     }
 }

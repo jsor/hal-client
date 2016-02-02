@@ -14,6 +14,14 @@ class HalClientTest extends TestCase
     /**
      * @test
      */
+    public function it_creates_default_http_client()
+    {
+        new HalClient('http://propilex.herokuapp.com');
+    }
+
+    /**
+     * @test
+     */
     public function it_is_immutable()
     {
         $httpClient = new FixtureHttpClient();
