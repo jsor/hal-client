@@ -20,7 +20,7 @@
         "guzzlehttp/guzzle": "~5.0|~6.0"
     },
     "suggest": {
-        "guzzlehttp/guzzle": "For using the Guzzle6HttpClient"
+        "guzzlehttp/guzzle": "For using Guzzle as your HTTP client"
     },
     "autoload": {
         "psr-4": {
