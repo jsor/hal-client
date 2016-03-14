@@ -105,16 +105,7 @@ final class HalClient implements HalClientInterface
         $uri,
         array $options = []
     ) {
-        /** @var \Psr\Http\Message\RequestInterface $request */
-        $request = clone $this->defaultRequest;
-
-        $request = $request->withMethod($method);
-
-        $request = $request->withUri(
-            GuzzlePsr7\Uri::resolve($request->getUri(), $uri)
-        );
-
-        $request = $this->applyOptions($request, $options);
+        $request = $this->createRequest($method, $uri, $options);
 
         try {
             $response = $this->httpClient->send($request);
@@ -130,6 +121,25 @@ final class HalClient implements HalClientInterface
         }
 
         return $this->handleResponse($request, $response, $options);
+    }
+
+    public function createRequest(
+        $method,
+        $uri,
+        array $options = []
+    ) {
+        /** @var \Psr\Http\Message\RequestInterface $request */
+        $request = clone $this->defaultRequest;
+
+        $request = $request->withMethod($method);
+
+        $request = $request->withUri(
+            GuzzlePsr7\Uri::resolve($request->getUri(), $uri)
+        );
+
+        $request = $this->applyOptions($request, $options);
+
+        return $request;
     }
 
     private function applyOptions(RequestInterface $request, array $options)
