@@ -17,6 +17,90 @@ class HalClientTest extends TestCase
 
     /**
      * @test
+     * @dataProvider urlProvider
+     */
+    public function it_assembles_urls_correctly($root, $uri, $expected)
+    {
+        $client = new HalClient($root);
+
+        $request = $client->createRequest('GET', $uri);
+
+        $this->assertEquals((string) $request->getUri(), $expected);
+    }
+
+    public static function urlProvider()
+    {
+        return [
+            [
+                'http://propilex.herokuapp.com',
+                'test',
+                'http://propilex.herokuapp.com/test'
+            ],
+            [
+                'http://propilex.herokuapp.com',
+                'test/',
+                'http://propilex.herokuapp.com/test/'
+            ],
+
+            [
+                'http://propilex.herokuapp.com/',
+                'test',
+                'http://propilex.herokuapp.com/test'
+            ],
+            [
+                'http://propilex.herokuapp.com/',
+                'test/',
+                'http://propilex.herokuapp.com/test/'
+            ],
+
+            [
+                'http://propilex.herokuapp.com/test',
+                'test',
+                'http://propilex.herokuapp.com/test'
+            ],
+            [
+                'http://propilex.herokuapp.com/test',
+                'test/',
+                'http://propilex.herokuapp.com/test/'
+            ],
+
+            [
+                'http://propilex.herokuapp.com/test/',
+                'test',
+                'http://propilex.herokuapp.com/test/test'
+            ],
+            [
+                'http://propilex.herokuapp.com/test/',
+                'test/',
+                'http://propilex.herokuapp.com/test/test/'
+            ],
+
+            [
+                'http://propilex.herokuapp.com/test',
+                '/test',
+                'http://propilex.herokuapp.com/test'
+            ],
+            [
+                'http://propilex.herokuapp.com/test',
+                '/test/',
+                'http://propilex.herokuapp.com/test/'
+            ],
+
+            [
+                'http://propilex.herokuapp.com/test/',
+                '/test',
+                'http://propilex.herokuapp.com/test'
+            ],
+            [
+                'http://propilex.herokuapp.com/test/',
+                '/test/',
+                'http://propilex.herokuapp.com/test/'
+            ],
+        ];
+    }
+
+    /**
+     * @test
      */
     public function it_is_immutable()
     {
