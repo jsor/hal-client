@@ -112,6 +112,17 @@ final class HalResourceFactory
     ) {
         try {
             return $response->getBody()->getContents();
+        } catch (\Throwable $e) {
+            throw new Exception\BadResponseException(
+                sprintf(
+                    'Error getting response body: %s.',
+                    $e->getMessage()
+                ),
+                $request,
+                $response,
+                new HalResource($client),
+                $e
+            );
         } catch (\Exception $e) {
             throw new Exception\BadResponseException(
                 sprintf(

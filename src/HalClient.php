@@ -109,15 +109,10 @@ final class HalClient implements HalClientInterface
 
         try {
             $response = $this->httpClient->send($request);
+        } catch (\Throwable $e) {
+            throw Exception\HttpClientException::create($request, $e);
         } catch (\Exception $e) {
-            throw new Exception\HttpClientException(
-                sprintf(
-                    'Exception thrown by the http client while sending request: %s.',
-                    $e->getMessage()
-                ),
-                $request,
-                $e
-            );
+            throw Exception\HttpClientException::create($request, $e);
         }
 
         return $this->handleResponse($request, $response, $options);

@@ -17,7 +17,7 @@ class BadResponseException extends \RuntimeException implements ExceptionInterfa
         RequestInterface $request,
         ResponseInterface $response,
         HalResource $resource,
-        \Exception $previous = null
+        $previous = null
     ) {
         $code = $response ? $response->getStatusCode() : 0;
 
@@ -32,7 +32,7 @@ class BadResponseException extends \RuntimeException implements ExceptionInterfa
         RequestInterface $request,
         ResponseInterface $response,
         HalResource $resource,
-        \Exception $previous = null,
+        $previous = null,
         $message = null
     ) {
         if (!$message) {
