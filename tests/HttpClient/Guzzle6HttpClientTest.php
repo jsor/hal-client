@@ -42,7 +42,7 @@ class Guzzle6HttpClientTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Jsor\HalClient\Exception\BadResponseException
+     * @expectedException \Jsor\HalClient\Exception\HttpClientException
      */
     public function it_will_transform_exception()
     {
@@ -67,7 +67,7 @@ class Guzzle6HttpClientTest extends TestCase
      * @test
      * @expectedException \Jsor\HalClient\Exception\BadResponseException
      */
-    public function it_will_transform_exception_with_response()
+    public function it_will_transform_exception_with_500_response()
     {
         $guzzleClient = $this->getMock('GuzzleHttp\ClientInterface');
 
@@ -78,6 +78,32 @@ class Guzzle6HttpClientTest extends TestCase
                 throw GuzzleRequestException::create(
                     $request,
                     new Response(500)
+                );
+            }));
+
+        $client = new HalClient(
+            'http://propilex.herokuapp.com',
+            new Guzzle6HttpClient($guzzleClient)
+        );
+
+        $client->request('GET', '/');
+    }
+
+    /**
+     * @test
+     * @expectedException \Jsor\HalClient\Exception\BadResponseException
+     */
+    public function it_will_transform_exception_with_404_response()
+    {
+        $guzzleClient = $this->getMock('GuzzleHttp\ClientInterface');
+
+        $guzzleClient
+            ->expects($this->once())
+            ->method('send')
+            ->will($this->returnCallback(function ($request) {
+                throw GuzzleRequestException::create(
+                    $request,
+                    new Response(404)
                 );
             }));
 
