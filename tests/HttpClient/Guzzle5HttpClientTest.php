@@ -3,6 +3,7 @@
 namespace Jsor\HalClient\HttpClient;
 
 use GuzzleHttp\ClientInterface as GuzzleClientInterface;
+use GuzzleHttp\Exception\BadResponseException as GuzzleBadResponseException;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
 use GuzzleHttp\Message\Request as GuzzleRequest;
 use GuzzleHttp\Message\Response as GuzzleResponse;
@@ -132,6 +133,39 @@ class Guzzle5HttpClientTest extends TestCase
                 throw GuzzleRequestException::create(
                     $request,
                     new GuzzleResponse(404)
+                );
+            }));
+
+        $client = new HalClient(
+            'http://propilex.herokuapp.com',
+            new Guzzle5HttpClient($guzzleClient)
+        );
+
+        $client->request('GET', '/');
+    }
+
+    /**
+     * @test
+     * @expectedException \Jsor\HalClient\Exception\BadResponseException
+     */
+    public function it_will_transform_bad_response_exception_without_response()
+    {
+        $guzzleRequest = new GuzzleRequest('GET', '/', []);
+
+        $guzzleClient = $this->getMock('GuzzleHttp\ClientInterface');
+
+        $guzzleClient
+            ->expects($this->once())
+            ->method('createRequest')
+            ->will($this->returnValue($guzzleRequest));
+
+        $guzzleClient
+            ->expects($this->once())
+            ->method('send')
+            ->will($this->returnCallback(function ($request) {
+                throw new GuzzleBadResponseException(
+                    'Error',
+                    $request
                 );
             }));
 
