@@ -39,19 +39,16 @@ final class Guzzle5HttpClient implements HttpClientInterface
 
     private function createRequest(RequestInterface $request)
     {
-        $options = [
-            'exceptions'      => false,
-            'allow_redirects' => false,
-        ];
-
-        $options['version'] = $request->getProtocolVersion();
-        $options['headers'] = $request->getHeaders();
-        $options['body']    = (string) $request->getBody();
-
         return $this->client->createRequest(
             $request->getMethod(),
             (string) $request->getUri(),
-            $options
+            [
+                'exceptions'      => false,
+                'allow_redirects' => false,
+                'version'         => $request->getProtocolVersion(),
+                'headers'         => $request->getHeaders(),
+                'body'            => (string) $request->getBody()
+            ]
         );
     }
 
