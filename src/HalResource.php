@@ -172,7 +172,7 @@ final class HalResource
     }
 
     /**
-     * @return Resource[]
+     * @return HalResource[]
      */
     public function getResource($rel)
     {
