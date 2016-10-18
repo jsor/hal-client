@@ -61,7 +61,7 @@ final class HalResourceFactory
         $contentTypeHeaders = $response->getHeader('Content-Type');
 
         foreach ($this->validContentTypes as $validContentType) {
-            if (in_array($validContentType, $contentTypeHeaders)) {
+            if (in_array($validContentType, $contentTypeHeaders, true)) {
                 return true;
             }
         }
