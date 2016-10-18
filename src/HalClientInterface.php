@@ -14,6 +14,7 @@ interface HalClientInterface
 
     /**
      * @param string
+     *
      * @return string[]
      */
     public function getHeader($name);
@@ -21,12 +22,14 @@ interface HalClientInterface
     /**
      * @param string
      * @param string|string[]
+     *
      * @return HalClientInterface
      */
     public function withHeader($name, $value);
 
     /**
      * @param array
+     *
      * @return HalResource|ResponseInterface
      */
     public function root(array $options = []);
@@ -34,6 +37,7 @@ interface HalClientInterface
     /**
      * @param string|UriInterface
      * @param array
+     *
      * @return HalResource|ResponseInterface
      */
     public function get($uri, array $options = []);
@@ -41,6 +45,7 @@ interface HalClientInterface
     /**
      * @param string|UriInterface
      * @param array
+     *
      * @return HalResource|ResponseInterface
      */
     public function post($uri, array $options = []);
@@ -48,6 +53,7 @@ interface HalClientInterface
     /**
      * @param string|UriInterface
      * @param array
+     *
      * @return HalResource|ResponseInterface
      */
     public function put($uri, array $options = []);
@@ -55,6 +61,7 @@ interface HalClientInterface
     /**
      * @param string|UriInterface
      * @param array
+     *
      * @return HalResource|ResponseInterface
      */
     public function delete($uri, array $options = []);
@@ -63,6 +70,7 @@ interface HalClientInterface
      * @param string
      * @param string|UriInterface
      * @param array
+     *
      * @return HalResource|ResponseInterface
      */
     public function request($method, $uri, array $options = []);

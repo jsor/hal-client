@@ -11,7 +11,8 @@ interface HttpClientInterface
      * Note, that this method must not throw exceptions but always return a
      * response.
      *
-     * @param  RequestInterface  $request
+     * @param RequestInterface $request
+     *
      * @return ResponseInterface
      */
     public function send(RequestInterface $request);
