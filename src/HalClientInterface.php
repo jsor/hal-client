@@ -2,6 +2,7 @@
 
 namespace Jsor\HalClient;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 
 interface HalClientInterface
@@ -26,35 +27,35 @@ interface HalClientInterface
 
     /**
      * @param array
-     * @return HalResource
+     * @return HalResource|ResponseInterface
      */
     public function root(array $options = []);
 
     /**
      * @param string|UriInterface
      * @param array
-     * @return HalResource
+     * @return HalResource|ResponseInterface
      */
     public function get($uri, array $options = []);
 
     /**
      * @param string|UriInterface
      * @param array
-     * @return HalResource
+     * @return HalResource|ResponseInterface
      */
     public function post($uri, array $options = []);
 
     /**
      * @param string|UriInterface
      * @param array
-     * @return HalResource
+     * @return HalResource|ResponseInterface
      */
     public function put($uri, array $options = []);
 
     /**
      * @param string|UriInterface
      * @param array
-     * @return HalResource
+     * @return HalResource|ResponseInterface
      */
     public function delete($uri, array $options = []);
 
@@ -62,7 +63,7 @@ interface HalClientInterface
      * @param string
      * @param string|UriInterface
      * @param array
-     * @return HalResource
+     * @return HalResource|ResponseInterface
      */
     public function request($method, $uri, array $options = []);
 }
