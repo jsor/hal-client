@@ -202,8 +202,10 @@ final class HalClient implements HalClientInterface
         $statusCode = $response->getStatusCode();
 
         if ($statusCode >= 200 && $statusCode < 300) {
-            if (isset($options['return_raw_response']) &&
-                true === $options['return_raw_response']) {
+            if (
+                isset($options['return_raw_response']) &&
+                true === $options['return_raw_response']
+            ) {
                 return $response;
             }
 

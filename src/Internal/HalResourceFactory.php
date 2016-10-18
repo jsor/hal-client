@@ -30,9 +30,11 @@ final class HalResourceFactory
 
         $body = trim($this->fetchBody($client, $request, $response));
 
-        if (201 === $response->getStatusCode() &&
+        if (
             '' === $body &&
-            $response->hasHeader('Location')) {
+            201 === $response->getStatusCode() &&
+            $response->hasHeader('Location')
+        ) {
             // Created response with Location header
             return $client->request('GET', $response->getHeader('Location')[0]);
         }
