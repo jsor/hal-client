@@ -26,7 +26,7 @@ class Guzzle6HttpClientTest extends TestCase
     {
         $response = new Response(200, ['Content-Type' => 'application/hal+json']);
 
-        $guzzleClient = $this->getMock('GuzzleHttp\ClientInterface');
+        $guzzleClient = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
 
         $guzzleClient
             ->expects($this->once())
@@ -47,7 +47,7 @@ class Guzzle6HttpClientTest extends TestCase
      */
     public function it_will_transform_exception()
     {
-        $guzzleClient = $this->getMock('GuzzleHttp\ClientInterface');
+        $guzzleClient = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
 
         $guzzleClient
             ->expects($this->once())
@@ -70,7 +70,7 @@ class Guzzle6HttpClientTest extends TestCase
      */
     public function it_will_transform_exception_with_500_response()
     {
-        $guzzleClient = $this->getMock('GuzzleHttp\ClientInterface');
+        $guzzleClient = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
 
         $guzzleClient
             ->expects($this->once())
@@ -96,7 +96,7 @@ class Guzzle6HttpClientTest extends TestCase
      */
     public function it_will_transform_exception_with_404_response()
     {
-        $guzzleClient = $this->getMock('GuzzleHttp\ClientInterface');
+        $guzzleClient = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
 
         $guzzleClient
             ->expects($this->once())
@@ -122,7 +122,7 @@ class Guzzle6HttpClientTest extends TestCase
      */
     public function it_will_transform_bad_response_exception_without_response()
     {
-        $guzzleClient = $this->getMock('GuzzleHttp\ClientInterface');
+        $guzzleClient = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
 
         $guzzleClient
             ->expects($this->once())

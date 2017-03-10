@@ -17,8 +17,9 @@
         "guzzlehttp/psr7": "^1.0"
     },
     "require-dev": {
-        "guzzlehttp/guzzle": "^5.0|^6.0",
-        "friendsofphp/php-cs-fixer": "^2.0@dev"
+        "guzzlehttp/guzzle": "^5.0||^6.0",
+        "friendsofphp/php-cs-fixer": "^2.0@dev",
+        "phpunit/phpunit": "^4.8.10||^5.0"
     },
     "suggest": {
         "guzzlehttp/guzzle": "For using Guzzle as your HTTP client"

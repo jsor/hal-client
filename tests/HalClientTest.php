@@ -294,7 +294,7 @@ class HalClientTest extends TestCase
         $response1 = new Response(201, ['Location' => 'http://propilex.herokuapp.com/resource']);
         $response2 = new Response(200, ['Content-Type' => 'application/hal+json'], '{"foo":"bar"}');
 
-        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
+        $httpClient = $this->getMockBuilder('Jsor\HalClient\HttpClient\HttpClientInterface')->getMock();
 
         $httpClient
             ->expects($this->exactly(2))
@@ -324,7 +324,7 @@ class HalClientTest extends TestCase
             'Content-Type' => 'application/hal+json'
         ], '{"foo":"bar"}');
 
-        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
+        $httpClient = $this->getMockBuilder('Jsor\HalClient\HttpClient\HttpClientInterface')->getMock();
 
         $httpClient
             ->expects($this->once())
@@ -348,7 +348,7 @@ class HalClientTest extends TestCase
     {
         $response = new Response(200);
 
-        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
+        $httpClient = $this->getMockBuilder('Jsor\HalClient\HttpClient\HttpClientInterface')->getMock();
 
         $httpClient
             ->expects($this->once())
@@ -384,7 +384,7 @@ class HalClientTest extends TestCase
     {
         $exception = new \Exception('Error');
 
-        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
+        $httpClient = $this->getMockBuilder('Jsor\HalClient\HttpClient\HttpClientInterface')->getMock();
 
         $httpClient
             ->expects($this->once())
@@ -413,7 +413,7 @@ class HalClientTest extends TestCase
      */
     public function it_throws_exception_when_http_client_returns_client_error()
     {
-        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
+        $httpClient = $this->getMockBuilder('Jsor\HalClient\HttpClient\HttpClientInterface')->getMock();
 
         $httpClient
             ->expects($this->once())
@@ -446,7 +446,7 @@ class HalClientTest extends TestCase
      */
     public function it_throws_exception_when_http_client_returns_server_error()
     {
-        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
+        $httpClient = $this->getMockBuilder('Jsor\HalClient\HttpClient\HttpClientInterface')->getMock();
 
         $httpClient
             ->expects($this->once())
@@ -479,7 +479,7 @@ class HalClientTest extends TestCase
      */
     public function it_throws_exception_when_http_client_returns_unsuccessful_response()
     {
-        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
+        $httpClient = $this->getMockBuilder('Jsor\HalClient\HttpClient\HttpClientInterface')->getMock();
 
         $httpClient
             ->expects($this->once())
@@ -512,7 +512,7 @@ class HalClientTest extends TestCase
      */
     public function it_throws_exception_for_invalid_content_type()
     {
-        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
+        $httpClient = $this->getMockBuilder('Jsor\HalClient\HttpClient\HttpClientInterface')->getMock();
 
         $httpClient
             ->expects($this->once())
@@ -534,14 +534,14 @@ class HalClientTest extends TestCase
      */
     public function it_throws_exception_when_getting_response_body_throws()
     {
-        $stream = $this->getMock('Psr\Http\Message\StreamInterface');
+        $stream = $this->getMockBuilder('Psr\Http\Message\StreamInterface')->getMock();
 
         $stream
             ->expects($this->once())
             ->method('getContents')
             ->will($this->throwException(new \Exception('Error')));
 
-        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
+        $httpClient = $this->getMockBuilder('Jsor\HalClient\HttpClient\HttpClientInterface')->getMock();
 
         $httpClient
             ->expects($this->once())
@@ -563,7 +563,7 @@ class HalClientTest extends TestCase
      */
     public function it_throws_exception_when_http_client_returns_invalid_json()
     {
-        $httpClient = $this->getMock('Jsor\HalClient\HttpClient\HttpClientInterface');
+        $httpClient = $this->getMockBuilder('Jsor\HalClient\HttpClient\HttpClientInterface')->getMock();
 
         $httpClient
             ->expects($this->once())

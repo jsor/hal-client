@@ -28,7 +28,7 @@ class Guzzle5HttpClientTest extends TestCase
         $guzzleRequest  = new GuzzleRequest('GET', '/', []);
         $guzzleResponse = new GuzzleResponse(200, ['Content-Type' => 'application/hal+json']);
 
-        $guzzleClient = $this->getMock('GuzzleHttp\ClientInterface');
+        $guzzleClient = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
 
         $guzzleClient
             ->expects($this->once())
@@ -56,7 +56,7 @@ class Guzzle5HttpClientTest extends TestCase
     {
         $guzzleRequest = new GuzzleRequest('GET', '/', []);
 
-        $guzzleClient = $this->getMock('GuzzleHttp\ClientInterface');
+        $guzzleClient = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
 
         $guzzleClient
             ->expects($this->once())
@@ -86,7 +86,7 @@ class Guzzle5HttpClientTest extends TestCase
     {
         $guzzleRequest = new GuzzleRequest('GET', '/', []);
 
-        $guzzleClient = $this->getMock('GuzzleHttp\ClientInterface');
+        $guzzleClient = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
 
         $guzzleClient
             ->expects($this->once())
@@ -119,7 +119,7 @@ class Guzzle5HttpClientTest extends TestCase
     {
         $guzzleRequest = new GuzzleRequest('GET', '/', []);
 
-        $guzzleClient = $this->getMock('GuzzleHttp\ClientInterface');
+        $guzzleClient = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
 
         $guzzleClient
             ->expects($this->once())
@@ -152,7 +152,7 @@ class Guzzle5HttpClientTest extends TestCase
     {
         $guzzleRequest = new GuzzleRequest('GET', '/', []);
 
-        $guzzleClient = $this->getMock('GuzzleHttp\ClientInterface');
+        $guzzleClient = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
 
         $guzzleClient
             ->expects($this->once())
