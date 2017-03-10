@@ -34,7 +34,7 @@ To use the default implementations shipped with this library, you need to
 install Guzzle 6 or Guzzle 5.
 
 ```bash
-composer require guzzlehttp/guzzle:"~5.0|~6.0"
+composer require guzzlehttp/guzzle:"^5.0||^6.0"
 ```
 
 ### URI template handling
@@ -42,7 +42,7 @@ composer require guzzlehttp/guzzle:"~5.0|~6.0"
 In order to expand URI templates in HAL links, you must either provide a global
 `\uri_template` function (e.g. by installing the
 [uri_template](https://github.com/ioseb/uri-template) extension) or install the
-`guzzlehttp/guzzle` package (version `~5.0` or `~6.0`).
+`guzzlehttp/guzzle` package (version `^5.0` or `^6.0`).
 
 Usage
 -----
