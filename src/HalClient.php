@@ -8,6 +8,7 @@ use Jsor\HalClient\HttpClient\Guzzle6HttpClient;
 use Jsor\HalClient\HttpClient\HttpClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\UriInterface;
 
 final class HalClient implements HalClientInterface
 {
@@ -129,7 +130,7 @@ final class HalClient implements HalClientInterface
         $request = $request->withMethod($method);
 
         $request = $request->withUri(
-            GuzzlePsr7\Uri::resolve($request->getUri(), $uri)
+            self::resolveUri($request->getUri(), $uri)
         );
 
         $request = $this->applyOptions($request, $options);
@@ -245,5 +246,24 @@ final class HalClient implements HalClientInterface
                 );
             // @codeCoverageIgnoreEnd
         }
+    }
+
+    private static function resolveUri($base, $rel)
+    {
+        static $resolver;
+
+        if (!$resolver) {
+            if (class_exists('GuzzleHttp\Psr7\UriResolver')) {
+                $resolver = ['GuzzleHttp\Psr7\UriResolver', 'resolve'];
+            } else {
+                $resolver = ['GuzzleHttp\Psr7\Uri', 'resolve'];
+            }
+        }
+
+        if (!($rel instanceof UriInterface)) {
+            $rel = new GuzzlePsr7\Uri($rel);
+        }
+
+        return $resolver($base, $rel);
     }
 }
