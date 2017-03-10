@@ -167,7 +167,7 @@ final class HalLink
             'You should either provide a global \uri_template function ' .
             '(e.g. by installing the uri_template extension from ' .
             'https://github.com/ioseb/uri-template) or by installing the ' .
-            'guzzlehttp/guzzle package (version ~5.0 or ~6.0) via Composer.'
+            'guzzlehttp/guzzle package (version ^5.0 or ^6.0) via Composer.'
         );
     }
 }
