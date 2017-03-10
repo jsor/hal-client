@@ -117,7 +117,6 @@ class FixtureHttpClient implements HttpClientInterface
                 break;
             default:
                 return new Response(404);
-
         }
 
         return new Response(
