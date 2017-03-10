@@ -250,18 +250,20 @@ final class HalClient implements HalClientInterface
 
     private static function resolveUri($base, $rel)
     {
-        static $resolver;
+        static $resolver, $castRel;
 
         if (!$resolver) {
             if (class_exists('GuzzleHttp\Psr7\UriResolver')) {
                 $resolver = ['GuzzleHttp\Psr7\UriResolver', 'resolve'];
-
-                if (!($rel instanceof UriInterface)) {
-                    $rel = new GuzzlePsr7\Uri($rel);
-                }
+                $castRel = true;
             } else {
                 $resolver = ['GuzzleHttp\Psr7\Uri', 'resolve'];
+                $castRel = false;
             }
+        }
+
+        if ($castRel && !($rel instanceof UriInterface)) {
+            $rel = new GuzzlePsr7\Uri($rel);
         }
 
         return $resolver($base, $rel);
