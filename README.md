@@ -26,7 +26,7 @@ all available versions.
 
 ### HTTP Client dependency
 
-The Hal client requires a [HttpClientInterface](src/HttpClient/HttpClientInterface)
+The Hal client requires a [HttpClientInterface](src/HttpClient/HttpClientInterface.php)
 implementation which can handle [PSR-7](http://www.php-fig.org/psr/psr-7/)
 requests and responses.
 
