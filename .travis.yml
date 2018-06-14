@@ -6,6 +6,7 @@ php:
   - 5.6
   - 7.0
   - 7.1
+  - 7.2
   - hhvm
 
 matrix:
@@ -14,7 +15,7 @@ matrix:
       env: dependencies=lowest
     - php: 5.4
       env: dependencies=highest
-    - php: 7.0
+    - php: 7.2
       env: dependencies=highest
   fast_finish: true
 
