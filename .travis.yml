@@ -33,7 +33,7 @@ script:
   - vendor/bin/phpunit -v --coverage-text --coverage-clover=./build/logs/clover.xml
 
 after_success:
-  - if [ -f ./build/logs/clover.xml ]; then travis_retry composer require satooshi/php-coveralls --no-interaction --update-with-dependencies; fi
-  - if [ -f ./build/logs/clover.xml ]; then php vendor/bin/coveralls -v; fi
+  - if [ -f ./build/logs/clover.xml ]; then wget https://github.com/php-coveralls/php-coveralls/releases/download/v1.1.0/coveralls.phar; fi
+  - if [ -f ./build/logs/clover.xml ]; then php ./coveralls.phar -v; fi
   - if [ -f ./build/logs/clover.xml ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
   - if [ -f ./build/logs/clover.xml ]; then php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml; fi
