@@ -8,4 +8,4 @@ filter:
 tools:
     external_code_coverage:
         timeout: 600
-        runs: 8
+        runs: 4

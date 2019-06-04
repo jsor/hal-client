@@ -7,9 +7,9 @@ php:
 matrix:
   include:
     - php: 7.2
-      env: dependencies=lowest
+      env: GUZZLE_VERSION=^5.0
     - php: 7.3
-      env: dependencies=highest
+      env: GUZZLE_VERSION=^5.0
   fast_finish: true
 
 cache:
@@ -17,9 +17,8 @@ cache:
     - $HOME/.composer/cache/files
 
 install:
-  - if [ -z "$dependencies" ]; then travis_retry composer install --no-interaction; fi;
-  - if [ "$dependencies" = "lowest" ]; then travis_retry composer update --prefer-lowest --no-interaction; fi;
-  - if [ "$dependencies" = "highest" ]; then travis_retry composer update --no-interaction; fi;
+  - composer install --no-interaction
+  - if [ "$GUZZLE_VERSION" ]; then composer require guzzlehttp/guzzle:${GUZZLE_VERSION}; fi;
   - composer show
 
 script:
