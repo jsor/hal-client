@@ -2,6 +2,8 @@
 
 namespace Jsor\HalClient;
 
+use Jsor\HalClient\Exception\InvalidArgumentException;
+
 class HalResourceTest extends TestCase
 {
     /**
@@ -75,7 +77,7 @@ class HalResourceTest extends TestCase
         $this->assertCount(1, $resource->getResource('string'));
         $this->assertSame('String', $resource->getFirstResource('string')->getProperty(0));
 
-        $this->setExpectedException('Jsor\HalClient\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $resource->getResource('non_existing');
     }
 
@@ -117,7 +119,7 @@ class HalResourceTest extends TestCase
         $this->assertSame('String', $resource->getFirstLink('string')->getHref());
 
         $this->assertFalse($resource->hasLink('non_existing'));
-        $this->setExpectedException('Jsor\HalClient\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
         $resource->getLink('non_existing');
     }
 

@@ -7,12 +7,14 @@ use GuzzleHttp\Exception\BadResponseException as GuzzleBadResponseException;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
 use GuzzleHttp\Message\Request as GuzzleRequest;
 use GuzzleHttp\Message\Response as GuzzleResponse;
+use Jsor\HalClient\Exception\BadResponseException;
+use Jsor\HalClient\Exception\HttpClientException;
 use Jsor\HalClient\HalClient;
 use Jsor\HalClient\TestCase;
 
 class Guzzle5HttpClientTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         if (version_compare(GuzzleClientInterface::VERSION, '5.0.0', '<') ||
             version_compare(GuzzleClientInterface::VERSION, '6.0.0', '>=')) {
@@ -50,7 +52,6 @@ class Guzzle5HttpClientTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Jsor\HalClient\Exception\HttpClientException
      */
     public function it_will_transform_exception()
     {
@@ -75,12 +76,13 @@ class Guzzle5HttpClientTest extends TestCase
             new Guzzle5HttpClient($guzzleClient)
         );
 
+        $this->expectException(HttpClientException::class);
+
         $client->request('GET', '/');
     }
 
     /**
      * @test
-     * @expectedException \Jsor\HalClient\Exception\BadResponseException
      */
     public function it_will_transform_exception_with_500_response()
     {
@@ -108,12 +110,13 @@ class Guzzle5HttpClientTest extends TestCase
             new Guzzle5HttpClient($guzzleClient)
         );
 
+        $this->expectException(BadResponseException::class);
+
         $client->request('GET', '/');
     }
 
     /**
      * @test
-     * @expectedException \Jsor\HalClient\Exception\BadResponseException
      */
     public function it_will_transform_exception_with_404_response()
     {
@@ -141,12 +144,13 @@ class Guzzle5HttpClientTest extends TestCase
             new Guzzle5HttpClient($guzzleClient)
         );
 
+        $this->expectException(BadResponseException::class);
+
         $client->request('GET', '/');
     }
 
     /**
      * @test
-     * @expectedException \Jsor\HalClient\Exception\BadResponseException
      */
     public function it_will_transform_bad_response_exception_without_response()
     {
@@ -173,6 +177,8 @@ class Guzzle5HttpClientTest extends TestCase
             'http://propilex.herokuapp.com',
             new Guzzle5HttpClient($guzzleClient)
         );
+
+        $this->expectException(BadResponseException::class);
 
         $client->request('GET', '/');
     }

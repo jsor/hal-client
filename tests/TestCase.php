@@ -2,6 +2,8 @@
 
 namespace Jsor\HalClient;
 
-class TestCase extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase as BaseTestCase;
+
+class TestCase extends BaseTestCase
 {
 }

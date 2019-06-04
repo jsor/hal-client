@@ -4,6 +4,7 @@ namespace Jsor\HalClient;
 
 use GuzzleHttp\Psr7\Response;
 use Jsor\HalClient\Exception\BadResponseException;
+use Jsor\HalClient\Exception\HttpClientException;
 
 class HalClientTest extends TestCase
 {
@@ -12,6 +13,8 @@ class HalClientTest extends TestCase
      */
     public function it_creates_default_http_client()
     {
+        $this->expectNotToPerformAssertions();
+
         new HalClient('http://propilex.herokuapp.com');
     }
 
@@ -377,8 +380,6 @@ class HalClientTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Jsor\HalClient\Exception\HttpClientException
-     * @expectedExceptionMessage Exception thrown by the http client while sending request: Error.
      */
     public function it_throws_exception_when_http_client_throws()
     {
@@ -396,6 +397,9 @@ class HalClientTest extends TestCase
             $httpClient
         );
 
+        $this->expectException(HttpClientException::class);
+        $this->expectExceptionMessage('Exception thrown by the http client while sending request: Error.');
+
         try {
             $client->request('GET', '/');
         } catch (\Exception $e) {
@@ -408,8 +412,6 @@ class HalClientTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Jsor\HalClient\Exception\BadResponseException
-     * @expectedExceptionMessage Client error [url] / [http method] GET [status code] 404 [reason phrase] Not Found.
      */
     public function it_throws_exception_when_http_client_returns_client_error()
     {
@@ -424,6 +426,9 @@ class HalClientTest extends TestCase
             'http://propilex.herokuapp.com',
             $httpClient
         );
+
+        $this->expectException(BadResponseException::class);
+        $this->expectExceptionMessage('Client error [url] / [http method] GET [status code] 404 [reason phrase] Not Found.');
 
         try {
             $client->request('GET', '/');
@@ -441,8 +446,6 @@ class HalClientTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Jsor\HalClient\Exception\BadResponseException
-     * @expectedExceptionMessage Server error [url] / [http method] GET [status code] 500 [reason phrase] Internal Server Error.
      */
     public function it_throws_exception_when_http_client_returns_server_error()
     {
@@ -457,6 +460,9 @@ class HalClientTest extends TestCase
             'http://propilex.herokuapp.com',
             $httpClient
         );
+
+        $this->expectException(BadResponseException::class);
+        $this->expectExceptionMessage('Server error [url] / [http method] GET [status code] 500 [reason phrase] Internal Server Error.');
 
         try {
             $client->request('GET', '/');
@@ -474,8 +480,6 @@ class HalClientTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Jsor\HalClient\Exception\BadResponseException
-     * @expectedExceptionMessage Unsuccessful response [url] / [http method] GET [status code] 303 [reason phrase] See Other.
      */
     public function it_throws_exception_when_http_client_returns_unsuccessful_response()
     {
@@ -490,6 +494,9 @@ class HalClientTest extends TestCase
             'http://propilex.herokuapp.com',
             $httpClient
         );
+
+        $this->expectException(BadResponseException::class);
+        $this->expectExceptionMessage('Unsuccessful response [url] / [http method] GET [status code] 303 [reason phrase] See Other.');
 
         try {
             $client->request('GET', '/');
@@ -507,8 +514,6 @@ class HalClientTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Jsor\HalClient\Exception\BadResponseException
-     * @expectedExceptionMessage Request did not return a valid content type. Returned content type: text/plain.
      */
     public function it_throws_exception_for_invalid_content_type()
     {
@@ -524,13 +529,14 @@ class HalClientTest extends TestCase
             $httpClient
         );
 
+        $this->expectException(BadResponseException::class);
+        $this->expectExceptionMessage('Request did not return a valid content type. Returned content type: text/plain.');
+
         $client->request('GET', '/');
     }
 
     /**
      * @test
-     * @expectedException \Jsor\HalClient\Exception\BadResponseException
-     * @expectedExceptionMessage Error getting response body: Error.
      */
     public function it_throws_exception_when_getting_response_body_throws()
     {
@@ -553,13 +559,14 @@ class HalClientTest extends TestCase
             $httpClient
         );
 
+        $this->expectException(BadResponseException::class);
+        $this->expectExceptionMessage('Error getting response body: Error.');
+
         $client->request('GET', '/');
     }
 
     /**
      * @test
-     * @expectedException \Jsor\HalClient\Exception\BadResponseException
-     * @expectedExceptionMessage JSON parse error: Syntax error
      */
     public function it_throws_exception_when_http_client_returns_invalid_json()
     {
@@ -574,6 +581,9 @@ class HalClientTest extends TestCase
             'http://propilex.herokuapp.com',
             $httpClient
         );
+
+        $this->expectException(BadResponseException::class);
+        $this->expectExceptionMessage('JSON parse error: Syntax error');
 
         $client->request('GET', '/');
     }
@@ -624,7 +634,7 @@ class HalClientTest extends TestCase
 
         $collection = $resource->getResource('documents');
 
-        $this->assertInternalType('array', $collection);
+        $this->assertIsArray($collection);
 
         $this->assertCount(3, $collection);
 
