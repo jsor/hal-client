@@ -60,8 +60,14 @@ final class HalResourceFactory
     {
         $contentTypeHeaders = $response->getHeader('Content-Type');
 
+        if (!preg_match("/^([^;]+)(;[\s]?(charset|boundary)=(.+))?$/", $contentTypeHeaders, $match)) {
+            return false;
+        }
+
+        $contentType = $match[1];
+
         foreach ($this->validContentTypes as $validContentType) {
-            if (in_array($validContentType, $contentTypeHeaders, true)) {
+            if (in_array($validContentType, $contentType, true)) {
                 return true;
             }
         }
