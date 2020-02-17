@@ -58,6 +58,8 @@ final class HalResourceFactory
 
     private function isValidContentType(ResponseInterface $response)
     {
+        if (!count($response->getHeader('Content-Type'))) return false;
+
         if (!preg_match("/^([^;]+)(;[\s]?(charset|boundary)=(.+))?$/", $response->getHeader('Content-Type')[0], $match)) {
             return false;
         }
