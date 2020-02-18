@@ -58,7 +58,9 @@ final class HalResourceFactory
 
     private function isValidContentType(ResponseInterface $response)
     {
-        if (!$response->hasHeader('Content-Type')) return false;
+        if (!$response->hasHeader('Content-Type')) {
+            return false;
+        }
 
         $contentTypeHeader = $response->getHeaderLine('Content-Type');
 

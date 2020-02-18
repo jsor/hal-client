@@ -2,8 +2,6 @@
 
 namespace Jsor\HalClient;
 
-use GuzzleHttp;
-
 final class HalLink
 {
     private $client;

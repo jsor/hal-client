@@ -253,10 +253,10 @@ final class HalClient implements HalClientInterface
         if (!$resolver) {
             if (class_exists('GuzzleHttp\Psr7\UriResolver')) {
                 $resolver = ['GuzzleHttp\Psr7\UriResolver', 'resolve'];
-                $castRel = true;
+                $castRel  = true;
             } else {
                 $resolver = ['GuzzleHttp\Psr7\Uri', 'resolve'];
-                $castRel = false;
+                $castRel  = false;
             }
         }
 
