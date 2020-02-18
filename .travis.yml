@@ -3,12 +3,13 @@ language: php
 php:
   - 7.2
   - 7.3
+  - 7.4
 
 matrix:
   include:
     - php: 7.2
       env: GUZZLE_VERSION=^5.0
-    - php: 7.3
+    - php: 7.4
       env: GUZZLE_VERSION=^5.0
   fast_finish: true
 
