@@ -5,6 +5,7 @@ namespace Jsor\HalClient;
 use GuzzleHttp\Psr7 as GuzzlePsr7;
 use Jsor\HalClient\HttpClient\Guzzle5HttpClient;
 use Jsor\HalClient\HttpClient\Guzzle6HttpClient;
+use Jsor\HalClient\HttpClient\Guzzle7HttpClient;
 use Jsor\HalClient\HttpClient\HttpClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -32,6 +33,17 @@ final class HalClient implements HalClientInterface
             'User-Agent' => get_class($this),
             'Accept'     => implode(', ', self::$validContentTypes)
         ]);
+    }
+
+    public static function getInstalledGuzzleVersion()
+    {
+        $version = 0;
+        if (defined("\GuzzleHttp\ClientInterface::VERSION")) {
+            $version = \GuzzleHttp\ClientInterface::VERSION;
+        } elseif (defined("\GuzzleHttp\ClientInterface::MAJOR_VERSION")) {
+            $version = \GuzzleHttp\ClientInterface::MAJOR_VERSION;
+        }
+        return $version;
     }
 
     public function __clone()
@@ -224,22 +236,26 @@ final class HalClient implements HalClientInterface
         if (!interface_exists('GuzzleHttp\ClientInterface')) {
             throw new \RuntimeException(
                 'Cannot create default HttpClient because guzzlehttp/guzzle is not installed.' .
-                'Install with `composer require guzzlehttp/guzzle:"~5.0|~6.0"`.'
+                'Install with `composer require guzzlehttp/guzzle:"~5.0|~6.0|~7.0"`.'
             );
         }
         // @codeCoverageIgnoreEnd
+        $version = self::getInstalledGuzzleVersion();
 
-        switch (substr(\GuzzleHttp\ClientInterface::VERSION, 0, 1)) {
+        switch (substr($version, 0, 1)) {
             case '5':
                 return new Guzzle5HttpClient();
             case '6':
                 return new Guzzle6HttpClient();
+            case '7':
+                return new Guzzle7HttpClient();
+
             // @codeCoverageIgnoreStart
             default:
                 throw new \RuntimeException(
                     sprintf(
                         'Unsupported GuzzleHttp\Client version %s.',
-                        \GuzzleHttp\ClientInterface::VERSION
+                        $version
                     )
                 );
             // @codeCoverageIgnoreEnd
