@@ -15,9 +15,10 @@ class Guzzle6HttpClientTest extends TestCase
 {
     public function setUp(): void
     {
-        if (version_compare(GuzzleClientInterface::VERSION, '6.0.0', '<') ||
-            version_compare(GuzzleClientInterface::VERSION, '7.0.0', '>=')) {
-            $this->markTestIncomplete('GuzzleHttp version other than ~6.0 installed (Installed version ' . GuzzleClientInterface::VERSION . ').');
+        $guzzleVersion = HalClient::getInstalledGuzzleVersion();
+        if ($guzzleVersion === 7 ||
+            version_compare($guzzleVersion, '6.0.0', '<')) {
+            $this->markTestIncomplete('GuzzleHttp version other than ~6.0 installed (Installed version ' . $guzzleVersion . ').');
         }
     }
 
