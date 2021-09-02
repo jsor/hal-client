@@ -12,6 +12,10 @@ matrix:
       env: GUZZLE_VERSION=^5.0
     - php: 7.4
       env: GUZZLE_VERSION=^5.0
+    - php: 7.2
+      env: GUZZLE_VERSION=^7.0
+    - php: 7.4
+      env: GUZZLE_VERSION=^7.0
   fast_finish: true
 
 cache:

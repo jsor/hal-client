@@ -159,6 +159,14 @@ final class HalLink
 
             return $guzzleUriTemplate->expand($template, $variables);
         }
+        
+        if (class_exists('\GuzzleHttp\UriTemplate\UriTemplate')) {
+            if (!$guzzleUriTemplate) {
+                $guzzleUriTemplate = new \GuzzleHttp\UriTemplate\UriTemplate();
+            }
+
+            return $guzzleUriTemplate->expand($template, $variables);
+        }
 
         throw new \RuntimeException(
             'Could not detect supported method for expanding URI templates. ' .
