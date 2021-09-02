@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    name: Tests (PHP ${{ matrix.php }}, Guzzle ${{ matrix.guzzle }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '7.2', '7.3', '7.4', '8.0' ]
+        guzzle: [ '^7' ]
+        include:
+          - php: '7.2'
+            guzzle: '^5'
+          - php: '7.2'
+            guzzle: '^6'
+          - php: '8.0'
+            guzzle: '^5'
+          - php: '8.0'
+            guzzle: '^6'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: xdebug
+
+      - name: Install dependencies
+        run: |
+          composer require --no-update "guzzlehttp/guzzle:${{ matrix.guzzle }}"
+          composer update --no-interaction --no-progress --prefer-dist
+          composer info -D
+
+      - name: Run tests
+        run: vendor/bin/phpunit --coverage-text
