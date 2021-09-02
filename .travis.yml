@@ -29,9 +29,3 @@ install:
 
 script:
   - vendor/bin/phpunit -v --coverage-text --coverage-clover=./build/logs/clover.xml
-
-after_success:
-  - if [ -f ./build/logs/clover.xml ]; then wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.1.0/php-coveralls.phar; fi
-  - if [ -f ./build/logs/clover.xml ]; then php ./php-coveralls.phar -v; fi
-  - if [ -f ./build/logs/clover.xml ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
-  - if [ -f ./build/logs/clover.xml ]; then php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml; fi
