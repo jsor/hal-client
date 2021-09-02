@@ -138,5 +138,5 @@ $changedDocument->delete();
 License
 -------
 
-Copyright (c) 2015-2020 Jan Sorgalla.
+Copyright (c) 2015-2021 Jan Sorgalla.
 Released under the [MIT License](https://github.com/jsor/hal-client/blob/master/LICENSE).
