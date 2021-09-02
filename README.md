@@ -31,10 +31,10 @@ implementation which can handle [PSR-7](http://www.php-fig.org/psr/psr-7/)
 requests and responses.
 
 To use the default implementations shipped with this library, you need to
-install Guzzle 6 or Guzzle 5.
+install Guzzle 7, 6 or 5.
 
 ```bash
-composer require guzzlehttp/guzzle:"^5.0||^6.0"
+composer require guzzlehttp/guzzle:"^5.0||^6.0||^7.0"
 ```
 
 ### URI template handling
