@@ -16,7 +16,7 @@ class FixtureHttpClient implements HttpClientInterface
                     return new Response(
                         200,
                         [
-                            'Content-Type' => 'application/hal+json'
+                            'Content-Type' => 'application/hal+json',
                         ],
                         file_get_contents(__DIR__ . '/fixtures/documents_1.json')
                     );
@@ -28,7 +28,7 @@ class FixtureHttpClient implements HttpClientInterface
                     return new Response(
                         200,
                         [
-                            'Content-Type' => 'application/hal+json'
+                            'Content-Type' => 'application/hal+json',
                         ],
                         file_get_contents(__DIR__ . '/fixtures/documents_2.json')
                     );
@@ -40,7 +40,7 @@ class FixtureHttpClient implements HttpClientInterface
                     return new Response(
                         200,
                         [
-                            'Content-Type' => 'application/hal+json'
+                            'Content-Type' => 'application/hal+json',
                         ],
                         file_get_contents(__DIR__ . '/fixtures/documents_3.json')
                     );
@@ -52,7 +52,7 @@ class FixtureHttpClient implements HttpClientInterface
                     return new Response(
                         204,
                         [
-                            'Content-Type' => 'text/html'
+                            'Content-Type' => 'text/html',
                         ]
                     );
                 }
@@ -62,7 +62,7 @@ class FixtureHttpClient implements HttpClientInterface
                         return new Response(
                             200,
                             [
-                                'Content-Type' => 'application/hal+json'
+                                'Content-Type' => 'application/hal+json',
                             ],
                             file_get_contents(__DIR__ . '/fixtures/documents_4_changed.json')
                         );
@@ -73,7 +73,7 @@ class FixtureHttpClient implements HttpClientInterface
                     return new Response(
                         200,
                         [
-                            'Content-Type' => 'application/hal+json'
+                            'Content-Type' => 'application/hal+json',
                         ],
                         file_get_contents(__DIR__ . '/fixtures/documents_4.json')
                     );
@@ -86,7 +86,7 @@ class FixtureHttpClient implements HttpClientInterface
                         return new Response(
                             201,
                             [
-                                'Location' => '/documents/4'
+                                'Location' => '/documents/4',
                             ]
                         );
                     }
@@ -96,7 +96,7 @@ class FixtureHttpClient implements HttpClientInterface
                     return new Response(
                         200,
                         [
-                            'Content-Type' => 'application/hal+json'
+                            'Content-Type' => 'application/hal+json',
                         ],
                         file_get_contents(__DIR__ . '/fixtures/documents.json')
                     );
@@ -108,7 +108,7 @@ class FixtureHttpClient implements HttpClientInterface
                     return new Response(
                         200,
                         [
-                            'Content-Type' => 'application/hal+json'
+                            'Content-Type' => 'application/hal+json',
                         ],
                         file_get_contents(__DIR__ . '/fixtures/root.json')
                     );
@@ -122,7 +122,7 @@ class FixtureHttpClient implements HttpClientInterface
         return new Response(
             405,
             [
-                'Content-Type' => 'text/plain'
+                'Content-Type' => 'text/plain',
             ],
             sprintf(
                 'No route found for "%s %s": Method Not Allowed',

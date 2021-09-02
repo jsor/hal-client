@@ -47,7 +47,7 @@ final class Guzzle5HttpClient implements HttpClientInterface
                 'allow_redirects' => false,
                 'version'         => $request->getProtocolVersion(),
                 'headers'         => $request->getHeaders(),
-                'body'            => (string) $request->getBody()
+                'body'            => (string) $request->getBody(),
             ]
         );
     }

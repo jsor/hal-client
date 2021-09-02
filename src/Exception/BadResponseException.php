@@ -5,8 +5,9 @@ namespace Jsor\HalClient\Exception;
 use Jsor\HalClient\HalResource;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 
-class BadResponseException extends \RuntimeException implements ExceptionInterface
+class BadResponseException extends RuntimeException implements ExceptionInterface
 {
     private $request;
     private $response;

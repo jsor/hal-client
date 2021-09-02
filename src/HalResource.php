@@ -2,6 +2,9 @@
 
 namespace Jsor\HalClient;
 
+use function count;
+use function is_array;
+
 final class HalResource
 {
     private $client;

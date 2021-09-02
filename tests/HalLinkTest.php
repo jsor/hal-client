@@ -6,7 +6,7 @@ class HalLinkTest extends TestCase
 {
     private $variables  = [
         'page'  => 1,
-        'limit' => 10
+        'limit' => 10,
     ];
 
     /**
@@ -35,7 +35,7 @@ class HalLinkTest extends TestCase
 
         $this->assertSame('/documents?page=1&limit=10', $link->getUri($this->variables));
         $this->assertSame('/documents{?page,limit}', $link->getHref());
-        $this->assertSame(true, $link->getTemplated());
+        $this->assertTrue($link->getTemplated());
         $this->assertSame('application/hal+json', $link->getType());
         $this->assertSame('http://example.com/deprecation', $link->getDeprecation());
         $this->assertSame('name', $link->getName());
@@ -70,10 +70,10 @@ class HalLinkTest extends TestCase
 
         $link->get($this->variables, [
             'headers' => [
-                'Foo' => 'bar'
+                'Foo' => 'bar',
             ],
             'body'  => 'Body',
-            'query' => 'key1=key2'
+            'query' => 'key1=key2',
         ]);
 
         $lastRequest = $httpClient->getLastRequest();
@@ -110,10 +110,10 @@ class HalLinkTest extends TestCase
 
         $link->post($this->variables, [
             'headers' => [
-                'Foo' => 'bar'
+                'Foo' => 'bar',
             ],
             'body'  => 'Body',
-            'query' => 'key1=key2'
+            'query' => 'key1=key2',
         ]);
 
         $lastRequest = $httpClient->getLastRequest();
@@ -150,10 +150,10 @@ class HalLinkTest extends TestCase
 
         $link->put($this->variables, [
             'headers' => [
-                'Foo' => 'bar'
+                'Foo' => 'bar',
             ],
             'body'  => 'Body',
-            'query' => 'key1=key2'
+            'query' => 'key1=key2',
         ]);
 
         $lastRequest = $httpClient->getLastRequest();
@@ -190,10 +190,10 @@ class HalLinkTest extends TestCase
 
         $link->delete($this->variables, [
             'headers' => [
-                'Foo' => 'bar'
+                'Foo' => 'bar',
             ],
             'body'  => 'Body',
-            'query' => 'key1=key2'
+            'query' => 'key1=key2',
         ]);
 
         $lastRequest = $httpClient->getLastRequest();
@@ -230,10 +230,10 @@ class HalLinkTest extends TestCase
 
         $link->request('PATCH', $this->variables, [
             'headers' => [
-                'Foo' => 'bar'
+                'Foo' => 'bar',
             ],
             'body'  => 'Body',
-            'query' => 'key1=key2'
+            'query' => 'key1=key2',
         ]);
 
         $lastRequest = $httpClient->getLastRequest();

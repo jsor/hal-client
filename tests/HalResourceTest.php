@@ -29,7 +29,7 @@ class HalResourceTest extends TestCase
             'page'  => 1,
             'limit' => 10,
             'pages' => 1,
-            'total' => 3
+            'total' => 3,
         ];
 
         $this->assertSame($expected, $resource->getProperties());
@@ -169,17 +169,17 @@ class HalResourceTest extends TestCase
             [],
             [
                 'self' => [
-                    'href' => '/documents'
-                ]
+                    'href' => '/documents',
+                ],
             ]
         );
 
         $resource->get([
             'headers' => [
-                'Foo' => 'bar'
+                'Foo' => 'bar',
             ],
             'body'  => 'Body',
-            'query' => 'key1=key2'
+            'query' => 'key1=key2',
         ]);
 
         $lastRequest = $httpClient->getLastRequest();
@@ -207,17 +207,17 @@ class HalResourceTest extends TestCase
             [],
             [
                 'self' => [
-                    'href' => '/documents'
-                ]
+                    'href' => '/documents',
+                ],
             ]
         );
 
         $resource->post([
             'headers' => [
-                'Foo' => 'bar'
+                'Foo' => 'bar',
             ],
             'body'  => 'Body',
-            'query' => 'key1=key2'
+            'query' => 'key1=key2',
         ]);
 
         $lastRequest = $httpClient->getLastRequest();
@@ -245,17 +245,17 @@ class HalResourceTest extends TestCase
             [],
             [
                 'self' => [
-                    'href' => '/documents'
-                ]
+                    'href' => '/documents',
+                ],
             ]
         );
 
         $resource->put([
             'headers' => [
-                'Foo' => 'bar'
+                'Foo' => 'bar',
             ],
             'body'  => 'Body',
-            'query' => 'key1=key2'
+            'query' => 'key1=key2',
         ]);
 
         $lastRequest = $httpClient->getLastRequest();
@@ -283,17 +283,17 @@ class HalResourceTest extends TestCase
             [],
             [
                 'self' => [
-                    'href' => '/documents'
-                ]
+                    'href' => '/documents',
+                ],
             ]
         );
 
         $resource->delete([
             'headers' => [
-                'Foo' => 'bar'
+                'Foo' => 'bar',
             ],
             'body'  => 'Body',
-            'query' => 'key1=key2'
+            'query' => 'key1=key2',
         ]);
 
         $lastRequest = $httpClient->getLastRequest();
@@ -321,17 +321,17 @@ class HalResourceTest extends TestCase
             [],
             [
                 'self' => [
-                    'href' => '/documents'
-                ]
+                    'href' => '/documents',
+                ],
             ]
         );
 
         $resource->request('PATCH', [
             'headers' => [
-                'Foo' => 'bar'
+                'Foo' => 'bar',
             ],
             'body'  => 'Body',
-            'query' => 'key1=key2'
+            'query' => 'key1=key2',
         ]);
 
         $lastRequest = $httpClient->getLastRequest();

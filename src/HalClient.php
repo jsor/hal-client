@@ -2,7 +2,9 @@
 
 namespace Jsor\HalClient;
 
+use function defined;
 use GuzzleHttp\Psr7 as GuzzlePsr7;
+use function is_array;
 use Jsor\HalClient\HttpClient\Guzzle5HttpClient;
 use Jsor\HalClient\HttpClient\Guzzle6HttpClient;
 use Jsor\HalClient\HttpClient\Guzzle7HttpClient;
@@ -10,6 +12,8 @@ use Jsor\HalClient\HttpClient\HttpClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
+use RuntimeException;
+use Throwable;
 
 final class HalClient implements HalClientInterface
 {
@@ -20,7 +24,7 @@ final class HalClient implements HalClientInterface
     private static $validContentTypes = [
         'application/hal+json',
         'application/json',
-        'application/vnd.error+json'
+        'application/vnd.error+json',
     ];
 
     public function __construct($rootUrl, HttpClientInterface $httpClient = null)
@@ -30,8 +34,8 @@ final class HalClient implements HalClientInterface
         $this->factory = new Internal\HalResourceFactory(self::$validContentTypes);
 
         $this->defaultRequest = new GuzzlePsr7\Request('GET', $rootUrl, [
-            'User-Agent' => get_class($this),
-            'Accept'     => implode(', ', self::$validContentTypes)
+            'User-Agent' => static::class,
+            'Accept'     => implode(', ', self::$validContentTypes),
         ]);
     }
 
@@ -43,6 +47,7 @@ final class HalClient implements HalClientInterface
         } elseif (defined("\GuzzleHttp\ClientInterface::MAJOR_VERSION")) {
             $version = \GuzzleHttp\ClientInterface::MAJOR_VERSION;
         }
+
         return $version;
     }
 
@@ -122,7 +127,7 @@ final class HalClient implements HalClientInterface
 
         try {
             $response = $this->httpClient->send($request);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw Exception\HttpClientException::create($request, $e);
         }
 
@@ -234,7 +239,7 @@ final class HalClient implements HalClientInterface
     {
         // @codeCoverageIgnoreStart
         if (!interface_exists('GuzzleHttp\ClientInterface')) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 'Cannot create default HttpClient because guzzlehttp/guzzle is not installed.' .
                 'Install with `composer require guzzlehttp/guzzle:"~5.0|~6.0|~7.0"`.'
             );
@@ -252,7 +257,7 @@ final class HalClient implements HalClientInterface
 
             // @codeCoverageIgnoreStart
             default:
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     sprintf(
                         'Unsupported GuzzleHttp\Client version %s.',
                         $version

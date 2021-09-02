@@ -20,7 +20,8 @@
     },
     "require-dev": {
         "guzzlehttp/guzzle": "^5.0||^6.0||^7.0",
-        "phpunit/phpunit": "^8.1"
+        "phpunit/phpunit": "^8.1",
+        "friendsofphp/php-cs-fixer": "^3.1"
     },
     "suggest": {
         "guzzlehttp/guzzle": "For using Guzzle as your HTTP client"

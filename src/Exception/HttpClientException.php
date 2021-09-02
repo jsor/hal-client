@@ -3,8 +3,9 @@
 namespace Jsor\HalClient\Exception;
 
 use Psr\Http\Message\RequestInterface;
+use RuntimeException;
 
-class HttpClientException extends \RuntimeException implements ExceptionInterface
+class HttpClientException extends RuntimeException implements ExceptionInterface
 {
     private $request;
 

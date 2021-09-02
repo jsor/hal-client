@@ -2,7 +2,6 @@
 
 namespace Jsor\HalClient\HttpClient;
 
-use GuzzleHttp\ClientInterface as GuzzleClientInterface;
 use GuzzleHttp\Exception\BadResponseException as GuzzleBadResponseException;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
 use GuzzleHttp\Psr7\Response;
@@ -13,10 +12,10 @@ use Jsor\HalClient\TestCase;
 
 class Guzzle7HttpClientTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         $guzzleVersion = HalClient::getInstalledGuzzleVersion();
-        if ($guzzleVersion !== 7) {
+        if (7 !== $guzzleVersion) {
             $this->markTestIncomplete('GuzzleHttp version other than ~6.0 installed (Installed version ' . $guzzleVersion . ').');
         }
     }
@@ -33,7 +32,7 @@ class Guzzle7HttpClientTest extends TestCase
         $guzzleClient
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnValue($response));
+            ->willReturn($response);
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
@@ -53,9 +52,9 @@ class Guzzle7HttpClientTest extends TestCase
         $guzzleClient
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnCallback(function ($request) {
+            ->willReturnCallback(function ($request) {
                 throw GuzzleRequestException::create($request);
-            }));
+            });
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
@@ -77,12 +76,12 @@ class Guzzle7HttpClientTest extends TestCase
         $guzzleClient
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnCallback(function ($request) {
+            ->willReturnCallback(function ($request) {
                 throw GuzzleRequestException::create(
                     $request,
                     new Response(500)
                 );
-            }));
+            });
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
@@ -104,12 +103,12 @@ class Guzzle7HttpClientTest extends TestCase
         $guzzleClient
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnCallback(function ($request) {
+            ->willReturnCallback(function ($request) {
                 throw GuzzleRequestException::create(
                     $request,
                     new Response(404)
                 );
-            }));
+            });
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
@@ -131,13 +130,13 @@ class Guzzle7HttpClientTest extends TestCase
         $guzzleClient
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnCallback(function ($request) {
+            ->willReturnCallback(function ($request) {
                 throw new GuzzleBadResponseException(
                     'Error',
                     $request,
                     new Response(500)
                 );
-            }));
+            });
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',

@@ -2,6 +2,9 @@
 
 namespace Jsor\HalClient;
 
+use function function_exists;
+use RuntimeException;
+
 final class HalLink
 {
     private $client;
@@ -148,7 +151,7 @@ final class HalLink
 
         if (function_exists('\uri_template')) {
             // @codeCoverageIgnoreStart
-            return \uri_template($template, $variables);
+            return uri_template($template, $variables);
             // @codeCoverageIgnoreEnd
         }
 
@@ -159,7 +162,7 @@ final class HalLink
 
             return $guzzleUriTemplate->expand($template, $variables);
         }
-        
+
         if (class_exists('\GuzzleHttp\UriTemplate\UriTemplate')) {
             if (!$guzzleUriTemplate) {
                 $guzzleUriTemplate = new \GuzzleHttp\UriTemplate\UriTemplate();
@@ -168,7 +171,7 @@ final class HalLink
             return $guzzleUriTemplate->expand($template, $variables);
         }
 
-        throw new \RuntimeException(
+        throw new RuntimeException(
             'Could not detect supported method for expanding URI templates. ' .
             'You should either provide a global \uri_template function ' .
             '(e.g. by installing the uri_template extension from ' .

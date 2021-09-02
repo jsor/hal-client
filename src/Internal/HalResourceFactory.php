@@ -2,11 +2,15 @@
 
 namespace Jsor\HalClient\Internal;
 
+use function array_key_exists;
+use function function_exists;
+use function in_array;
 use Jsor\HalClient\Exception;
 use Jsor\HalClient\HalClientInterface;
 use Jsor\HalClient\HalResource;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 final class HalResourceFactory
 {
@@ -116,7 +120,7 @@ final class HalResourceFactory
     ) {
         try {
             return $response->getBody()->getContents();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new Exception\BadResponseException(
                 sprintf(
                     'Error getting response body: %s.',

@@ -2,9 +2,11 @@
 
 namespace Jsor\HalClient;
 
+use Exception;
 use GuzzleHttp\Psr7\Response;
 use Jsor\HalClient\Exception\BadResponseException;
 use Jsor\HalClient\Exception\HttpClientException;
+use ReflectionProperty;
 
 class HalClientTest extends TestCase
 {
@@ -37,67 +39,67 @@ class HalClientTest extends TestCase
             [
                 'http://propilex.herokuapp.com',
                 'test',
-                'http://propilex.herokuapp.com/test'
+                'http://propilex.herokuapp.com/test',
             ],
             [
                 'http://propilex.herokuapp.com',
                 'test/',
-                'http://propilex.herokuapp.com/test/'
+                'http://propilex.herokuapp.com/test/',
             ],
 
             [
                 'http://propilex.herokuapp.com/',
                 'test',
-                'http://propilex.herokuapp.com/test'
+                'http://propilex.herokuapp.com/test',
             ],
             [
                 'http://propilex.herokuapp.com/',
                 'test/',
-                'http://propilex.herokuapp.com/test/'
+                'http://propilex.herokuapp.com/test/',
             ],
 
             [
                 'http://propilex.herokuapp.com/test',
                 'test',
-                'http://propilex.herokuapp.com/test'
+                'http://propilex.herokuapp.com/test',
             ],
             [
                 'http://propilex.herokuapp.com/test',
                 'test/',
-                'http://propilex.herokuapp.com/test/'
+                'http://propilex.herokuapp.com/test/',
             ],
 
             [
                 'http://propilex.herokuapp.com/test/',
                 'test',
-                'http://propilex.herokuapp.com/test/test'
+                'http://propilex.herokuapp.com/test/test',
             ],
             [
                 'http://propilex.herokuapp.com/test/',
                 'test/',
-                'http://propilex.herokuapp.com/test/test/'
+                'http://propilex.herokuapp.com/test/test/',
             ],
 
             [
                 'http://propilex.herokuapp.com/test',
                 '/test',
-                'http://propilex.herokuapp.com/test'
+                'http://propilex.herokuapp.com/test',
             ],
             [
                 'http://propilex.herokuapp.com/test',
                 '/test/',
-                'http://propilex.herokuapp.com/test/'
+                'http://propilex.herokuapp.com/test/',
             ],
 
             [
                 'http://propilex.herokuapp.com/test/',
                 '/test',
-                'http://propilex.herokuapp.com/test'
+                'http://propilex.herokuapp.com/test',
             ],
             [
                 'http://propilex.herokuapp.com/test/',
                 '/test/',
-                'http://propilex.herokuapp.com/test/'
+                'http://propilex.herokuapp.com/test/',
             ],
         ];
     }
@@ -116,9 +118,9 @@ class HalClientTest extends TestCase
 
         $cloned = clone $client;
 
-        $httpClientReflProp = new \ReflectionProperty('Jsor\HalClient\HalClient', 'httpClient');
+        $httpClientReflProp = new ReflectionProperty('Jsor\HalClient\HalClient', 'httpClient');
         $httpClientReflProp->setAccessible(true);
-        $defaultRequestReflProp = new \ReflectionProperty('Jsor\HalClient\HalClient', 'defaultRequest');
+        $defaultRequestReflProp = new ReflectionProperty('Jsor\HalClient\HalClient', 'defaultRequest');
         $defaultRequestReflProp->setAccessible(true);
 
         $this->assertNotSame($httpClientReflProp->getValue($client), $httpClientReflProp->getValue($cloned));
@@ -154,10 +156,10 @@ class HalClientTest extends TestCase
         $client->get('', [
             'version' => '1.0',
             'headers' => [
-                'Foo' => 'bar'
+                'Foo' => 'bar',
             ],
             'body'  => 'Body',
-            'query' => 'key1=key2'
+            'query' => 'key1=key2',
         ]);
 
         $lastRequest = $httpClient->getLastRequest();
@@ -184,10 +186,10 @@ class HalClientTest extends TestCase
         $client->post('', [
             'version' => '1.0',
             'headers' => [
-                'Foo' => 'bar'
+                'Foo' => 'bar',
             ],
             'body'  => 'Body',
-            'query' => 'key1=key2'
+            'query' => 'key1=key2',
         ]);
 
         $lastRequest = $httpClient->getLastRequest();
@@ -214,10 +216,10 @@ class HalClientTest extends TestCase
         $client->put('', [
             'version' => '1.0',
             'headers' => [
-                'Foo' => 'bar'
+                'Foo' => 'bar',
             ],
             'body'  => 'Body',
-            'query' => 'key1=key2'
+            'query' => 'key1=key2',
         ]);
 
         $lastRequest = $httpClient->getLastRequest();
@@ -244,10 +246,10 @@ class HalClientTest extends TestCase
         $client->delete('', [
             'version' => '1.0',
             'headers' => [
-                'Foo' => 'bar'
+                'Foo' => 'bar',
             ],
             'body'  => 'Body',
-            'query' => 'key1=key2'
+            'query' => 'key1=key2',
         ]);
 
         $lastRequest = $httpClient->getLastRequest();
@@ -274,10 +276,10 @@ class HalClientTest extends TestCase
         $client->request('PATCH', '', [
             'version' => '1.0',
             'headers' => [
-                'Foo' => 'bar'
+                'Foo' => 'bar',
             ],
             'body'  => 'Body',
-            'query' => 'key1=key2'
+            'query' => 'key1=key2',
         ]);
 
         $lastRequest = $httpClient->getLastRequest();
@@ -324,7 +326,7 @@ class HalClientTest extends TestCase
     {
         $response = new Response(201, [
             'Location'     => 'http://propilex.herokuapp.com/resource',
-            'Content-Type' => 'application/hal+json'
+            'Content-Type' => 'application/hal+json',
         ], '{"foo":"bar"}');
 
         $httpClient = $this->getMockBuilder('Jsor\HalClient\HttpClient\HttpClientInterface')->getMock();
@@ -332,7 +334,7 @@ class HalClientTest extends TestCase
         $httpClient
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnValue($response));
+            ->willReturn($response);
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
@@ -356,7 +358,7 @@ class HalClientTest extends TestCase
         $httpClient
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnValue($response));
+            ->willReturn($response);
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
@@ -366,13 +368,13 @@ class HalClientTest extends TestCase
         $response = $client->request('POST', '', [
             'version' => '1.0',
             'headers' => [
-                'Foo' => 'bar'
+                'Foo' => 'bar',
             ],
             'body'  => 'Body',
             'query' => [
                 'key1' => 'key2',
             ],
-            'return_raw_response' => true
+            'return_raw_response' => true,
         ]);
 
         $this->assertSame($response, $response);
@@ -383,7 +385,7 @@ class HalClientTest extends TestCase
      */
     public function it_throws_exception_when_http_client_throws()
     {
-        $exception = new \Exception('Error');
+        $exception = new Exception('Error');
 
         $httpClient = $this->getMockBuilder('Jsor\HalClient\HttpClient\HttpClientInterface')->getMock();
 
@@ -402,7 +404,7 @@ class HalClientTest extends TestCase
 
         try {
             $client->request('GET', '/');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertSame($exception, $e->getPrevious());
             $this->assertInstanceOf('Psr\Http\Message\RequestInterface', $e->getRequest());
 
@@ -420,7 +422,7 @@ class HalClientTest extends TestCase
         $httpClient
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnValue(new Response(404, ['Content-Type' => 'application/hal+json'], '{"msg":"error"}')));
+            ->willReturn(new Response(404, ['Content-Type' => 'application/hal+json'], '{"msg":"error"}'));
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
@@ -454,7 +456,7 @@ class HalClientTest extends TestCase
         $httpClient
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnValue(new Response(500, ['Content-Type' => 'application/hal+json'], '{"msg":"error"}')));
+            ->willReturn(new Response(500, ['Content-Type' => 'application/hal+json'], '{"msg":"error"}'));
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
@@ -488,7 +490,7 @@ class HalClientTest extends TestCase
         $httpClient
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnValue(new Response(303, ['Content-Type' => 'application/hal+json'], '{"msg":"error"}')));
+            ->willReturn(new Response(303, ['Content-Type' => 'application/hal+json'], '{"msg":"error"}'));
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
@@ -522,7 +524,7 @@ class HalClientTest extends TestCase
         $httpClient
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnValue(new Response(200, ['Content-Type' => 'text/plain'])));
+            ->willReturn(new Response(200, ['Content-Type' => 'text/plain']));
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
@@ -545,14 +547,14 @@ class HalClientTest extends TestCase
         $stream
             ->expects($this->once())
             ->method('getContents')
-            ->will($this->throwException(new \Exception('Error')));
+            ->will($this->throwException(new Exception('Error')));
 
         $httpClient = $this->getMockBuilder('Jsor\HalClient\HttpClient\HttpClientInterface')->getMock();
 
         $httpClient
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnValue(new Response(200, ['Content-Type' => 'application/hal+json'], $stream)));
+            ->willReturn(new Response(200, ['Content-Type' => 'application/hal+json'], $stream));
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
@@ -575,7 +577,7 @@ class HalClientTest extends TestCase
         $httpClient
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnValue(new Response(200, ['Content-Type' => 'application/hal+json'], '{')));
+            ->willReturn(new Response(200, ['Content-Type' => 'application/hal+json'], '{'));
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
@@ -614,8 +616,8 @@ class HalClientTest extends TestCase
 
         $resource = $resource->getFirstLink('documents')->get([], [
             'query' => [
-                'page' => 1
-            ]
+                'page' => 1,
+            ],
         ]);
 
         $this->assertInstanceOf('Jsor\HalClient\HalResource', $resource);
@@ -624,7 +626,7 @@ class HalClientTest extends TestCase
             'page'  => 1,
             'limit' => 10,
             'pages' => 1,
-            'total' => 3
+            'total' => 3,
         ];
 
         $this->assertEquals($expected, $resource->getProperties());
@@ -659,8 +661,8 @@ class HalClientTest extends TestCase
         $newResource = $resource->post([
             'body' => [
                 'title' => 'Test 4',
-                'body'  => 'Lorem ipsum'
-            ]
+                'body'  => 'Lorem ipsum',
+            ],
         ]);
 
         $this->assertEquals('Test 4', $newResource->getProperty('title'));
@@ -668,8 +670,8 @@ class HalClientTest extends TestCase
         $changedResource = $newResource->put([
             'body' => [
                 'title' => 'Test 4 changed',
-                'body'  => 'Lorem ipsum'
-            ]
+                'body'  => 'Lorem ipsum',
+            ],
         ]);
 
         $this->assertEquals('Test 4 changed', $changedResource->getProperty('title'));
