@@ -10,17 +10,26 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '7.2', '7.3', '7.4', '8.0' ]
-        guzzle: [ '^7' ]
         include:
           - php: '7.2'
             guzzle: '^5'
           - php: '7.2'
             guzzle: '^6'
+          - php: '7.2'
+            guzzle: '^7'
+          - php: '7.4'
+            guzzle: '^5'
+          - php: '7.4'
+            guzzle: '^6'
+          - php: '7.4'
+            guzzle: '^7'
+            code-coverage: 'yes'
           - php: '8.0'
             guzzle: '^5'
           - php: '8.0'
             guzzle: '^6'
+          - php: '8.0'
+            guzzle: '^7'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -38,4 +47,17 @@ jobs:
           composer info -D
 
       - name: Run tests
+        if: matrix.code-coverage != 'yes'
         run: vendor/bin/phpunit --coverage-text
+
+      - name: Run tests with code coverage
+        if: matrix.code-coverage == 'yes'
+        run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+
+      - name: Upload coverage results to Coveralls
+        if: matrix.code-coverage == 'yes'
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          composer global require php-coveralls/php-coveralls
+          php-coveralls -v
