@@ -37,13 +37,6 @@ install Guzzle 7, 6 or 5.
 composer require guzzlehttp/guzzle:"^5.0||^6.0||^7.0"
 ```
 
-### URI template handling
-
-In order to expand URI templates in HAL links, you must either provide a global
-`\uri_template` function (e.g. by installing the
-[uri_template](https://github.com/ioseb/uri-template) extension) or install the
-`guzzlehttp/guzzle` package (version `^5.0` or `^6.0`).
-
 Usage
 -----
 
