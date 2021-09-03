@@ -5,8 +5,8 @@ A lightweight PHP client for consuming and manipulating
 [Hypertext Application Language (HAL)](https://tools.ietf.org/html/draft-kelly-json-hal)
 resources.
 
-[![Build Status](https://travis-ci.org/jsor/hal-client.svg?branch=master)](http://travis-ci.org/jsor/hal-client?branch=master)
-[![Coverage Status](https://coveralls.io/repos/jsor/hal-client/badge.svg?branch=master&service=github)](https://coveralls.io/github/jsor/hal-client?branch=master)
+[![Build Status](https://github.com/jsor/hal-client/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/jsor/hal-client/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/jsor/hal-client/badge.svg?branch=main&service=github)](https://coveralls.io/github/jsor/hal-client?branch=main)
 
 * [Installation](#installation)
 * [Usage](#usage)
@@ -139,4 +139,4 @@ License
 -------
 
 Copyright (c) 2015-2021 Jan Sorgalla.
-Released under the [MIT License](https://github.com/jsor/hal-client/blob/master/LICENSE).
+Released under the [MIT License](LICENSE).
