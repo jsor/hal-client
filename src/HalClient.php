@@ -70,7 +70,7 @@ final class HalClient implements HalClientInterface
         $instance = clone $this;
 
         $instance->defaultRequest = $instance->defaultRequest->withUri(
-            GuzzlePsr7\uri_for($rootUrl)
+            GuzzlePsr7\Utils::uriFor($rootUrl)
         );
 
         return $instance;
@@ -181,11 +181,11 @@ final class HalClient implements HalClientInterface
         $uri = $request->getUri();
 
         if (!is_array($query)) {
-            $query = GuzzlePsr7\parse_query($query);
+            $query = GuzzlePsr7\Query::parse($query);
         }
 
         $newQuery = array_merge(
-            GuzzlePsr7\parse_query($uri->getQuery()),
+            GuzzlePsr7\Query::parse($uri->getQuery()),
             $query
         );
 
@@ -207,7 +207,7 @@ final class HalClient implements HalClientInterface
             }
         }
 
-        return $request->withBody(GuzzlePsr7\stream_for($body));
+        return $request->withBody(GuzzlePsr7\Utils::streamFor($body));
     }
 
     private function handleResponse(
