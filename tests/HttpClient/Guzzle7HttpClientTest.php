@@ -23,7 +23,7 @@ class Guzzle7HttpClientTest extends TestCase
     /**
      * @test
      */
-    public function it_will_call_send()
+    public function it_will_call_send(): void
     {
         $response = new Response(200, ['Content-Type' => 'application/hal+json']);
 
@@ -36,7 +36,7 @@ class Guzzle7HttpClientTest extends TestCase
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
-            new Guzzle6HttpClient($guzzleClient)
+            new Guzzle7HttpClient($guzzleClient)
         );
 
         $client->request('GET', '/');
@@ -45,20 +45,20 @@ class Guzzle7HttpClientTest extends TestCase
     /**
      * @test
      */
-    public function it_will_transform_exception()
+    public function it_will_transform_exception(): void
     {
         $guzzleClient = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
 
         $guzzleClient
             ->expects($this->once())
             ->method('send')
-            ->willReturnCallback(function ($request) {
+            ->willReturnCallback(static function ($request) {
                 throw GuzzleRequestException::create($request);
             });
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
-            new Guzzle6HttpClient($guzzleClient)
+            new Guzzle7HttpClient($guzzleClient)
         );
 
         $this->expectException(HttpClientException::class);
@@ -69,14 +69,14 @@ class Guzzle7HttpClientTest extends TestCase
     /**
      * @test
      */
-    public function it_will_transform_exception_with_500_response()
+    public function it_will_transform_exception_with_500_response(): void
     {
         $guzzleClient = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
 
         $guzzleClient
             ->expects($this->once())
             ->method('send')
-            ->willReturnCallback(function ($request) {
+            ->willReturnCallback(static function ($request) {
                 throw GuzzleRequestException::create(
                     $request,
                     new Response(500)
@@ -85,7 +85,7 @@ class Guzzle7HttpClientTest extends TestCase
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
-            new Guzzle6HttpClient($guzzleClient)
+            new Guzzle7HttpClient($guzzleClient)
         );
 
         $this->expectException(BadResponseException::class);
@@ -96,14 +96,14 @@ class Guzzle7HttpClientTest extends TestCase
     /**
      * @test
      */
-    public function it_will_transform_exception_with_404_response()
+    public function it_will_transform_exception_with_404_response(): void
     {
         $guzzleClient = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
 
         $guzzleClient
             ->expects($this->once())
             ->method('send')
-            ->willReturnCallback(function ($request) {
+            ->willReturnCallback(static function ($request) {
                 throw GuzzleRequestException::create(
                     $request,
                     new Response(404)
@@ -112,7 +112,7 @@ class Guzzle7HttpClientTest extends TestCase
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
-            new Guzzle6HttpClient($guzzleClient)
+            new Guzzle7HttpClient($guzzleClient)
         );
 
         $this->expectException(BadResponseException::class);
@@ -123,14 +123,14 @@ class Guzzle7HttpClientTest extends TestCase
     /**
      * @test
      */
-    public function it_will_transform_bad_response_exception_without_response()
+    public function it_will_transform_bad_response_exception_without_response(): void
     {
         $guzzleClient = $this->getMockBuilder('GuzzleHttp\ClientInterface')->getMock();
 
         $guzzleClient
             ->expects($this->once())
             ->method('send')
-            ->willReturnCallback(function ($request) {
+            ->willReturnCallback(static function ($request) {
                 throw new GuzzleBadResponseException(
                     'Error',
                     $request,
@@ -140,7 +140,7 @@ class Guzzle7HttpClientTest extends TestCase
 
         $client = new HalClient(
             'http://propilex.herokuapp.com',
-            new Guzzle6HttpClient($guzzleClient)
+            new Guzzle7HttpClient($guzzleClient)
         );
 
         $this->expectException(BadResponseException::class);

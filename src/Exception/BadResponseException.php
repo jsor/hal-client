@@ -7,6 +7,8 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
+use function sprintf;
+
 class BadResponseException extends RuntimeException implements ExceptionInterface
 {
     private $request;
@@ -18,7 +20,7 @@ class BadResponseException extends RuntimeException implements ExceptionInterfac
         RequestInterface $request,
         ResponseInterface $response,
         HalResource $resource,
-        $previous = null
+        $previous = null,
     ) {
         $code = $response ? $response->getStatusCode() : 0;
 
@@ -34,7 +36,7 @@ class BadResponseException extends RuntimeException implements ExceptionInterfac
         ResponseInterface $response,
         HalResource $resource,
         $previous = null,
-        $message = null
+        $message = null,
     ) {
         if (!$message) {
             $code = $response->getStatusCode();

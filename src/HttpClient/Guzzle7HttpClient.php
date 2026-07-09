@@ -12,7 +12,7 @@ final class Guzzle7HttpClient implements HttpClientInterface
 {
     private $client;
 
-    public function __construct(GuzzleClientInterface $client = null)
+    public function __construct(?GuzzleClientInterface $client = null)
     {
         $this->client = $client ?: new GuzzleClient();
     }

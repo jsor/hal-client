@@ -12,7 +12,7 @@ class HalLinkTest extends TestCase
     /**
      * @test
      */
-    public function it_extracts_properties()
+    public function it_extracts_properties(): void
     {
         $httpClient = new RecordingHttpClient();
 
@@ -47,7 +47,7 @@ class HalLinkTest extends TestCase
     /**
      * @test
      */
-    public function it_can_get()
+    public function it_can_get(): void
     {
         $httpClient = new RecordingHttpClient();
 
@@ -87,7 +87,7 @@ class HalLinkTest extends TestCase
     /**
      * @test
      */
-    public function it_can_post()
+    public function it_can_post(): void
     {
         $httpClient = new RecordingHttpClient();
 
@@ -127,7 +127,7 @@ class HalLinkTest extends TestCase
     /**
      * @test
      */
-    public function it_can_put()
+    public function it_can_put(): void
     {
         $httpClient = new RecordingHttpClient();
 
@@ -167,7 +167,7 @@ class HalLinkTest extends TestCase
     /**
      * @test
      */
-    public function it_can_delete()
+    public function it_can_delete(): void
     {
         $httpClient = new RecordingHttpClient();
 
@@ -207,7 +207,7 @@ class HalLinkTest extends TestCase
     /**
      * @test
      */
-    public function it_can_request()
+    public function it_can_request(): void
     {
         $httpClient = new RecordingHttpClient();
 

@@ -2,10 +2,11 @@
 
 namespace Jsor\HalClient;
 
-use function count;
 use GuzzleHttp\Psr7\Response;
 use Jsor\HalClient\HttpClient\HttpClientInterface;
 use Psr\Http\Message\RequestInterface;
+
+use function count;
 
 class RecordingHttpClient implements HttpClientInterface
 {

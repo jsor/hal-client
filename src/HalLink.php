@@ -25,7 +25,7 @@ final class HalLink
         $name = null,
         $profile = null,
         $title = null,
-        $hreflang = null
+        $hreflang = null,
     ) {
         $this->client      = $client;
         $this->href        = $href;

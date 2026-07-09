@@ -6,6 +6,8 @@ use GuzzleHttp\Psr7\Response;
 use Jsor\HalClient\HttpClient\HttpClientInterface;
 use Psr\Http\Message\RequestInterface;
 
+use function sprintf;
+
 class FixtureHttpClient implements HttpClientInterface
 {
     public function send(RequestInterface $request)

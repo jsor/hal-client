@@ -4,6 +4,7 @@ namespace Jsor\HalClient;
 
 use function count;
 use function is_array;
+use function sprintf;
 
 final class HalResource
 {
@@ -16,7 +17,7 @@ final class HalResource
         HalClientInterface $client,
         array $properties = [],
         array $links = [],
-        array $resources = []
+        array $resources = [],
     ) {
         $this->client     = $client;
         $this->properties = $properties;
@@ -123,7 +124,7 @@ final class HalResource
             );
         }
 
-        return $this->normalizeData($this->links[$resolvedRel], function ($link) {
+        return $this->normalizeData($this->links[$resolvedRel], static function ($link) {
             return ['href' => $link];
         });
     }
@@ -198,7 +199,7 @@ final class HalResource
     private function getResourceData($rel)
     {
         if (isset($this->resources[$rel])) {
-            return $this->normalizeData($this->resources[$rel], function ($resource) {
+            return $this->normalizeData($this->resources[$rel], static function ($resource) {
                 return [$resource];
             });
         }
@@ -221,7 +222,7 @@ final class HalResource
             $data = [$data];
         }
 
-        $data = array_map(function ($entry) use ($arrayNormalizer) {
+        $data = array_map(static function ($entry) use ($arrayNormalizer) {
             if (null !== $entry && !is_array($entry)) {
                 $entry = $arrayNormalizer($entry);
             }
@@ -229,7 +230,7 @@ final class HalResource
             return $entry;
         }, $data);
 
-        return array_filter($data, function ($entry) {
+        return array_filter($data, static function ($entry) {
             return null !== $entry;
         });
     }

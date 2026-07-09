@@ -2,9 +2,7 @@
 
 namespace Jsor\HalClient;
 
-use function defined;
 use GuzzleHttp\Psr7 as GuzzlePsr7;
-use function is_array;
 use Jsor\HalClient\HttpClient\Guzzle5HttpClient;
 use Jsor\HalClient\HttpClient\Guzzle6HttpClient;
 use Jsor\HalClient\HttpClient\Guzzle7HttpClient;
@@ -14,6 +12,10 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use RuntimeException;
 use Throwable;
+
+use function defined;
+use function is_array;
+use function sprintf;
 
 final class HalClient implements HalClientInterface
 {
@@ -27,7 +29,7 @@ final class HalClient implements HalClientInterface
         'application/vnd.error+json',
     ];
 
-    public function __construct($rootUrl, HttpClientInterface $httpClient = null)
+    public function __construct($rootUrl, ?HttpClientInterface $httpClient = null)
     {
         $this->httpClient = $httpClient ?: self::createDefaultHttpClient();
 
@@ -58,7 +60,7 @@ final class HalClient implements HalClientInterface
     }
 
     /**
-     * @return \Psr\Http\Message\UriInterface
+     * @return UriInterface
      */
     public function getRootUrl()
     {
@@ -70,7 +72,7 @@ final class HalClient implements HalClientInterface
         $instance = clone $this;
 
         $instance->defaultRequest = $instance->defaultRequest->withUri(
-            GuzzlePsr7\uri_for($rootUrl)
+            GuzzlePsr7\Utils::uriFor($rootUrl)
         );
 
         return $instance;
@@ -121,7 +123,7 @@ final class HalClient implements HalClientInterface
     public function request(
         $method,
         $uri,
-        array $options = []
+        array $options = [],
     ) {
         $request = $this->createRequest($method, $uri, $options);
 
@@ -137,9 +139,9 @@ final class HalClient implements HalClientInterface
     public function createRequest(
         $method,
         $uri,
-        array $options = []
+        array $options = [],
     ) {
-        /** @var \Psr\Http\Message\RequestInterface $request */
+        /** @var RequestInterface $request */
         $request = clone $this->defaultRequest;
 
         $request = $request->withMethod($method);
@@ -181,16 +183,16 @@ final class HalClient implements HalClientInterface
         $uri = $request->getUri();
 
         if (!is_array($query)) {
-            $query = GuzzlePsr7\parse_query($query);
+            $query = GuzzlePsr7\Query::parse($query);
         }
 
         $newQuery = array_merge(
-            GuzzlePsr7\parse_query($uri->getQuery()),
+            GuzzlePsr7\Query::parse($uri->getQuery()),
             $query
         );
 
         return $request->withUri(
-            $uri->withQuery(http_build_query($newQuery, null, '&'))
+            $uri->withQuery(http_build_query($newQuery, '', '&'))
         );
     }
 
@@ -207,20 +209,20 @@ final class HalClient implements HalClientInterface
             }
         }
 
-        return $request->withBody(GuzzlePsr7\stream_for($body));
+        return $request->withBody(GuzzlePsr7\Utils::streamFor($body));
     }
 
     private function handleResponse(
         RequestInterface $request,
         ResponseInterface $response,
-        array $options
+        array $options,
     ) {
         $statusCode = $response->getStatusCode();
 
         if ($statusCode >= 200 && $statusCode < 300) {
             if (
-                isset($options['return_raw_response']) &&
-                true === $options['return_raw_response']
+                isset($options['return_raw_response'])
+                && true === $options['return_raw_response']
             ) {
                 return $response;
             }
@@ -255,7 +257,7 @@ final class HalClient implements HalClientInterface
             case '7':
                 return new Guzzle7HttpClient();
 
-            // @codeCoverageIgnoreStart
+                // @codeCoverageIgnoreStart
             default:
                 throw new RuntimeException(
                     sprintf(
@@ -263,7 +265,7 @@ final class HalClient implements HalClientInterface
                         $version
                     )
                 );
-            // @codeCoverageIgnoreEnd
+                // @codeCoverageIgnoreEnd
         }
     }
 

@@ -2,15 +2,15 @@
 
 namespace Jsor\HalClient\Internal;
 
-use function array_key_exists;
-use function function_exists;
-use function in_array;
 use Jsor\HalClient\Exception;
 use Jsor\HalClient\HalClientInterface;
 use Jsor\HalClient\HalResource;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
+
+use function in_array;
+use function sprintf;
 
 final class HalResourceFactory
 {
@@ -25,7 +25,7 @@ final class HalResourceFactory
         HalClientInterface $client,
         RequestInterface $request,
         ResponseInterface $response,
-        $ignoreInvalidContentType = false
+        $ignoreInvalidContentType = false,
     ) {
         if (204 === $response->getStatusCode()) {
             // No-Content response
@@ -35,9 +35,9 @@ final class HalResourceFactory
         $body = trim($this->fetchBody($client, $request, $response));
 
         if (
-            '' === $body &&
-            201 === $response->getStatusCode() &&
-            $response->hasHeader('Location')
+            ''     === $body
+            && 201 === $response->getStatusCode()
+            && $response->hasHeader('Location')
         ) {
             // Created response with Location header
             return $client->request('GET', $response->getHeader('Location')[0]);
@@ -79,7 +79,7 @@ final class HalResourceFactory
         HalClientInterface $client,
         RequestInterface $request,
         ResponseInterface $response,
-        $ignoreInvalidContentType
+        $ignoreInvalidContentType,
     ) {
         if ($ignoreInvalidContentType) {
             return new HalResource($client);
@@ -102,7 +102,7 @@ final class HalResourceFactory
         HalClientInterface $client,
         RequestInterface $request,
         ResponseInterface $response,
-        $body
+        $body,
     ) {
         if ('' === $body) {
             return new HalResource($client);
@@ -116,7 +116,7 @@ final class HalResourceFactory
     private function fetchBody(
         HalClientInterface $client,
         RequestInterface $request,
-        ResponseInterface $response
+        ResponseInterface $response,
     ) {
         try {
             return $response->getBody()->getContents();
@@ -138,7 +138,7 @@ final class HalResourceFactory
         HalClientInterface $client,
         RequestInterface $request,
         ResponseInterface $response,
-        $body
+        $body,
     ) {
         $data = json_decode($body, true);
 

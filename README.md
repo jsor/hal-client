@@ -31,10 +31,10 @@ implementation which can handle [PSR-7](http://www.php-fig.org/psr/psr-7/)
 requests and responses.
 
 To use the default implementations shipped with this library, you need to
-install Guzzle 7, 6 or 5.
+install Guzzle 7.
 
 ```bash
-composer require guzzlehttp/guzzle:"^5.0||^6.0||^7.0"
+composer require guzzlehttp/guzzle:"^7.0"
 ```
 
 Usage
@@ -138,5 +138,5 @@ $changedDocument->delete();
 License
 -------
 
-Copyright (c) 2015-2021 Jan Sorgalla.
+Copyright (c) 2015-2026 Jan Sorgalla.
 Released under the [MIT License](LICENSE).

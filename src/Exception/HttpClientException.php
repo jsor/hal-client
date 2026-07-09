@@ -5,6 +5,8 @@ namespace Jsor\HalClient\Exception;
 use Psr\Http\Message\RequestInterface;
 use RuntimeException;
 
+use function sprintf;
+
 class HttpClientException extends RuntimeException implements ExceptionInterface
 {
     private $request;
@@ -12,7 +14,7 @@ class HttpClientException extends RuntimeException implements ExceptionInterface
     public function __construct(
         $message,
         RequestInterface $request,
-        $previous
+        $previous,
     ) {
         parent::__construct($message, 0, $previous);
 
@@ -27,7 +29,7 @@ class HttpClientException extends RuntimeException implements ExceptionInterface
     public static function create(
         RequestInterface $request,
         $previous = null,
-        $message = null
+        $message = null,
     ) {
         if (!$message) {
             $message = 'Exception thrown by the http client while sending request.';
